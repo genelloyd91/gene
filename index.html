@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="fr-FR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="https://yveszieba.me/xmlrpc.php">
+
+<title>5 Tips to develop your business stamina yourself &#8211; When the why is clear the how is easy</title>
+<meta name="google-site-verification" content="nGbsnUbZ276wYXdbwI0NKLBeNuOa6Mp-IIXPJnVpgeI" />
+<meta name="msvalidate.01" content="6480DD393170434862663AEDF0FAF615" />
+<meta name="p:domain_verify" content="&lt;met8b1e2c161681d416218d22c6e36e5c5d" />
+<meta name="yandex-verification" content="d6cb558962404b04" />
+
+<!-- Async WordPress.com Remote Login -->
+<script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.remove(); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[i].remove();
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+						+ '//' + window.location.hostname;
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly95dmVzemllYmEubWU%3D"
+		+ "&wpcomid=24415255"
+		+ "&time=1600259128";
+	document.body.appendChild( iframe );
+}, false );
+</script>
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//yveszieba.wordpress.com' />
+<link rel='dns-prefetch' href='//wordpress.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="When the why is clear the how is easy &raquo; Flux" href="https://yveszieba.me/feed/" />
+<link rel="alternate" type="application/rss+xml" title="When the why is clear the how is easy &raquo; Flux des commentaires" href="https://yveszieba.me/comments/feed/" />
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+			<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/72x72\/","ext":".png","svgUrl":"https:\/\/s0.wp.com\/wp-content\/mu-plugins\/wpcom-smileys\/twemoji\/2\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/s0.wp.com\/wp-includes\/js\/wp-emoji-release.min.js?m=1596548281h&ver=5.5-wpcom-48929"}};
+			!function(e,a,t){var r,n,o,i,p=a.createElement("canvas"),s=p.getContext&&p.getContext("2d");function c(e,t){var a=String.fromCharCode;s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,e),0,0);var r=p.toDataURL();return s.clearRect(0,0,p.width,p.height),s.fillText(a.apply(this,t),0,0),r===p.toDataURL()}function l(e){if(!s||!s.fillText)return!1;switch(s.textBaseline="top",s.font="600 32px Arial",e){case"flag":return!c([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])&&(!c([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!c([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]));case"emoji":return!c([55357,56424,8205,55356,57212],[55357,56424,8203,55356,57212])}return!1}function d(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(i=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},o=0;o<i.length;o++)t.supports[i[o]]=l(i[o]),t.supports.everything=t.supports.everything&&t.supports[i[o]],"flag"!==i[o]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[i[o]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(r=t.source||{}).concatemoji?d(r.concatemoji):r.wpemoji&&r.twemoji&&(d(r.twemoji),d(r.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+	<link rel='stylesheet' id='all-css-0-1' href='https://s0.wp.com/_static/??-eJydkdFqwzAMRX9ojgilo3kY+xY7Fp5aKzaWTJq/n2tWKN0Wxl6Er3yPhCRYs5nTorgocDU51kCLwJrnxEaYIm5PaphFXuBnrGC0it7kJPqk9rBIFxQ4o2Y7X0xX3+x3b6hNOiyh/RSE0zANB3CVogcXU8ddsWUD0S3iH8p06qG73VJVEwr5/5YoVmkJ8gv+MPdtgpbnbPXmYPRkMSI32x62kg/Y9tssX2+jeN1H+gWdywVFTItMlY1+tF591e/8Nh6n6Ti9Hsbx/Ak9kcjq?cssminify=yes' type='text/css' media='all' />
+<style id='wp-block-library-inline-css'>
+.has-text-align-justify {
+	text-align:justify;
+}
+</style>
+<style id='global-styles-inline-css'>
+:root {
+	--wp--preset--color--black: #000000;
+	--wp--preset--color--cyan-bluish-gray: #abb8c3;
+	--wp--preset--color--light-green-cyan: #7bdcb5;
+	--wp--preset--color--luminous-vivid-amber: #fcb900;
+	--wp--preset--color--luminous-vivid-orange: #ff6900;
+	--wp--preset--color--pale-cyan-blue: #8ed1fc;
+	--wp--preset--color--pale-pink: #f78da7;
+	--wp--preset--color--vivid-cyan-blue: #0693e3;
+	--wp--preset--color--vivid-green-cyan: #00d084;
+	--wp--preset--color--vivid-purple: #9b51e0;
+	--wp--preset--color--vivid-red: #cf2e2e;
+	--wp--preset--color--white: #ffffff;
+	--wp--preset--font-size--small: 13;
+	--wp--preset--font-size--normal: 16;
+	--wp--preset--font-size--medium: 20;
+	--wp--preset--font-size--large: 36;
+	--wp--preset--font-size--huge: 48;
+	--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);
+	--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);
+	--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);
+	--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);
+	--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);
+	--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);
+	--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);
+	--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);
+	--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);
+	--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);
+	--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);
+	--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);
+}
+
+</style>
+<link rel='stylesheet' id='all-css-2-1' href='https://s0.wp.com/_static/??/wp-content/mu-plugins/comment-likes/css/comment-likes.css,/i/noticons/noticons.css?m=1436783281j&cssminify=yes' type='text/css' media='all' />
+<link crossorigin="anonymous" rel='stylesheet' id='edin-pt-sans-css'  href='https://fonts.googleapis.com/css?family=PT+Sans%3A400%2C700%2C400italic%2C700italic&#038;subset=latin%2Clatin-ext' media='all' />
+<link crossorigin="anonymous" rel='stylesheet' id='edin-pt-serif-css'  href='https://fonts.googleapis.com/css?family=PT+Serif%3A400%2C700%2C400italic%2C700italic&#038;subset=latin%2Clatin-ext' media='all' />
+<link crossorigin="anonymous" rel='stylesheet' id='edin-pt-mono-css'  href='https://fonts.googleapis.com/css?family=PT+Mono&#038;subset=latin%2Clatin-ext' media='all' />
+<link rel='stylesheet' id='all-css-8-1' href='https://s0.wp.com/_static/??-eJyVkNEOwiAMRX9IrJpo9MH4LYx1iAIlo2T691Z9cOqc+nZKz20boEvKUGSMDLzHgBlSqQBrF6GR9xuJMDU5T6Anh6KSL9bFDBYjtk4aH/At+7oo89njV0vuuJuqS4bC2EWdqy1yBqakEmWh4RUDESzSpaND5XUHjCF5zfjHgEYbrGSC8u4ocPo9Kczatjo8aPzbSXkymh3Fp0I1Xrt2LNpi5ckKWhCrV15Du7CdLzez+Wq5WK8PF881zZA=?cssminify=yes' type='text/css' media='all' />
+<style id='edin-style-inline-css'>
+.hero.with-featured-image { background-image: url(https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=900&#038;h=636&#038;crop=1); }
+</style>
+<link rel='stylesheet' id='print-css-9-1' href='https://s0.wp.com/wp-content/mu-plugins/global-print/global-print.css?m=1465851035h&cssminify=yes' type='text/css' media='print' />
+<link rel='stylesheet' id='all-css-10-1' href='https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?m=1560469195h&cssminify=yes' type='text/css' media='all' />
+<style id='jetpack-global-styles-frontend-style-inline-css'>
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+</style>
+<link rel='stylesheet' id='all-css-12-1' href='https://s0.wp.com/_static/??-eJx9jMEKAjEMRH/IGETXXQ/it3Tb2kbSpjRZ9vdV0IMonmYG3htcG3ipFqthWaDxkqgqNlGDKzvqqNl1qumdW6+6wd+WiifHwJLkc3xJlmOJivmAiWV2/O91pZCiKT6QV4fUKYCrAZjUnu6lnHfDaRyPw7SfbneXuU5w?cssminify=yes' type='text/css' media='all' />
+<script id='jetpack_related-posts-js-extra'>
+var related_posts_js_options = {"post_heading":"h4"};
+</script>
+<script type='text/javascript' src='https://s0.wp.com/_static/??-eJx9jksOwjAMRC+EiYqgogvEWdrGRI7yI7GJuD3ms+oCydJ4xvMkm16A0hrEYjNe5y5Ynz/Z+7YzWlhzYkz8vse8UECQhnV2mil8y9teFChBHKVmKoaZ0ULJjTfuD9XJOuTPQ98VFokFHoRdqWu8DKdpGA/jeTr6F+r9R7Y='></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://yveszieba.wordpress.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://s0.wp.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Communiquer efficacement' href='https://yveszieba.me/2016/09/18/communiquer-efficacement/' />
+<link rel='next' title='Conférence lors du Carrefour des&nbsp;Créateurs' href='https://yveszieba.me/2016/10/25/conference-lors-du-carrefour-des-createurs/' />
+<meta name="generator" content="WordPress.com" />
+<link rel="canonical" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" />
+<link rel='shortlink' href='https://wp.me/p1Erwr-l57' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Fyveszieba.me%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Fyveszieba.me%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="5 Tips to develop your business stamina yourself" />
+<meta property="og:url" content="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" />
+<meta property="og:description" content="learn about the journey, the iterations, the use of machine learning technologies and the strategic pivots before reaching the point of what looks like an instant success. It is powerful when combi…" />
+<meta property="article:published_time" content="2016-09-23T20:36:37+00:00" />
+<meta property="article:modified_time" content="2016-09-23T20:36:38+00:00" />
+<meta property="og:site_name" content="When the why is clear the how is easy" />
+<meta property="og:image" content="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg" />
+<meta property="og:image:width" content="648" />
+<meta property="og:image:height" content="458" />
+<meta property="og:locale" content="fr_FR" />
+<meta name="twitter:creator" content="@yveszieba" />
+<meta name="twitter:site" content="@yveszieba" />
+<meta name="twitter:text:title" content="5 Tips to develop your business stamina&nbsp;yourself" />
+<meta name="twitter:image" content="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=640" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel='openid.server' href='https://yveszieba.me/?openidserver=1' />
+<link rel='openid.delegate' href='https://yveszieba.me/' />
+<link rel="search" type="application/opensearchdescription+xml" href="https://yveszieba.me/osd.xml" title="When the why is clear the how is easy" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+<meta name="theme-color" content="#31006e" />
+		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<style type="text/css">
+.widget_twitter li {
+	word-wrap: break-word;
+}
+</style>
+<meta name="application-name" content="When the why is clear the how is easy" /><meta name="msapplication-window" content="width=device-width;height=device-height" /><meta name="msapplication-tooltip" content="Digital Transformation Strategist" /><meta name="msapplication-task" content="name=Souscrire;action-uri=https://yveszieba.me/feed/;icon-uri=https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=16" /><meta name="msapplication-task" content="name=Inscrivez-vous pour créer un blog gratuitement;action-uri=http://wordpress.com/signup/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Assistance WordPress.com;action-uri=http://support.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="msapplication-task" content="name=Forums WordPress.com;action-uri=http://forums.wordpress.com/;icon-uri=https://s0.wp.com/i/favicon.ico" /><meta name="description" content="learn about the journey, the iterations, the use of machine learning technologies and the strategic pivots before reaching the point of what looks like an instant success. It is powerful when combined with the entrepreneurship mindset and a strong business acumen." />
+<style type="text/css" id="custom-background-css">
+body.custom-background { background-color: #31006e; }
+</style>
+	<link rel="amphtml" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/amp/"><style type="text/css" id="custom-colors-css">.hero a.button-minimal{border-color:#fff !important}#comments #respond .form-submit input#comment-submit,.widget_flickr #flickr_badge_uber_wrapper td a:last-child{background:#c5c5c5 !important;border-color:#c5c5c5 !important}@media screen and (min-width:1020px){body.small-screen.navigation-classic .primary-navigation .menu-primary>ul>li.current-menu-item:before,body.small-screen.navigation-classic .primary-navigation .menu-primary>ul>li.current_page_item:before,body.small-screen.navigation-classic .primary-navigation .menu-item-has-children:hover:before,body.small-screen.navigation-classic .primary-navigation ul ul .menu-item-has-children:before{color:#fff}body.large-screen.navigation-classic .primary-navigation ul ul ul:before{border-bottom-color:transparent}}@media screen and (min-width:1230px){body.small-screen .menu-toggle.open,body.small-screen .menu-toggle.open:before,body.small-screen .menu-toggle.open:focus,body.small-screen .menu-toggle.open:focus:before{color:#fff}body.small-screen .menu-toggle.open:before,body.small-screen .menu-toggle.open:focus:before{border-color:#fff}body.small-screen .menu-toggle.open:before{background:0 0}body.small-screen .menu-toggle.open:hover,body.small-screen .menu-toggle.open:active,body.small-screen .menu-toggle.open:hover:before,body.small-screen .menu-toggle.open:active:before{color:rgba(255,255,255,.5)}body.small-screen .menu-toggle.open:hover:before,body.small-screen .menu-toggle.open:active:before{border-color:rgba(255,255,255,.5)}}body{background-color:#31006e}mark,ins,button,input[type=button],input[type=reset],input[type=submit],a.button,a.button:visited,a.button-minimal:hover,a.button-minimal:focus,a.button-minimal:active,body:not(.small-screen) .menu-toggle.open:before,body:not(.small-screen) .search-toggle.open:before,.navigation-wrapper,.search-wrapper,.widget_nav_menu .dropdown-toggle:hover,.hero.with-featured-image,body[class*=front-page] .hero,#infinite-handle span,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li:hover,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li.current-menu-item>a,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li.current_page_item>a,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li>a:hover,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li>a:focus,.large-screen.navigation-classic .primary-navigation .menu-primary>ul>li>a:active,.large-screen.navigation-classic .primary-navigation ul ul li,.widget_akismet_widget .a-stats a{background-color:#d8111b}a,a.button-minimal,a.button-minimal:visited,.menu-toggle:focus,.search-toggle:focus,.primary-navigation .dropdown-toggle:hover,.footer-navigation a:hover,.footer-navigation a:focus,.footer-navigation a:active,.screen-reader-text:hover,.screen-reader-text:focus,.screen-reader-text:active,.site-footer a:hover,.site-footer a:focus,.site-footer a:active,.format-link .entry-title a:hover:after,.format-link .entry-title a:focus:after,.format-link .entry-title a:active:after,.entry-title a:hover,.entry-title a:focus,.entry-title a:active,.featured-page .entry-title a:hover,.featured-page .entry-title a:focus,.featured-page .entry-title a:active,.grid .entry-title a:hover,.grid .entry-title a:focus,.grid .entry-title a:active,#infinite-footer .blog-credits a:hover,#infinite-footer .blog-credits a:focus,#infinite-footer .blog-credits a:active,#infinite-footer .blog-info a:hover,#infinite-footer .blog-info a:focus,#infinite-footer .blog-info a:active,.small-screen .menu-toggle:hover:before,.small-screen .menu-toggle:active:before,.small-screen .menu-toggle.open:before,.small-screen .menu-toggle.open,.medium-screen .menu-toggle:hover,.medium-screen .menu-toggle:active,.small-screen .search-toggle:hover:before,.small-screen .search-toggle:active:before,.small-screen .search-toggle.open:before,.small-screen .search-toggle.open,.medium-screen .search-toggle:hover,.medium-screen .search-toggle:active,.large-screen.navigation-classic .primary-navigation .menu-item-has-children:before,.large-screen.navigation-classic .secondary-navigation a:hover,.large-screen.navigation-classic .secondary-navigation a:focus,.large-screen.navigation-classic .secondary-navigation a:active,.widget_goodreads div[class^=gr_custom_each_container] a:hover,.widget_goodreads div[class^=gr_custom_each_container] a:focus,.widget_goodreads div[class^=gr_custom_each_container] a:active,.testimonial-entry-title a:hover,.testimonial-entry-title a:focus,.testimonial-entry-title a:active{color:#d8111b}button,input[type=button],input[type=reset],input[type=submit],input[type=text]:focus,input[type=email]:focus,input[type=url]:focus,input[type=password]:focus,input[type=search]:focus,textarea:focus,a.button,a.button-minimal,a.button:visited,a.button-minimal:visited,a.button-minimal:hover,a.button-minimal:focus,a.button-minimal:active,#infinite-handle span,.small-screen .menu-toggle:hover:before,.small-screen .menu-toggle:active:before,.small-screen .menu-toggle.open:before,.small-screen .search-toggle:hover:before,.small-screen .search-toggle:active:before,.small-screen .search-toggle.open:before,#comments #respond #comment-form-comment.active,#comments #respond .comment-form-fields div.comment-form-input.active,.widget_akismet_widget .a-stats a{border-color:#d8111b}.search-wrapper .search-field{border-color:#ef989d}.large-screen.navigation-classic .primary-navigation ul ul ul:before,.rtl blockquote,body.rtl .hentry .wpcom-reblog-snapshot .reblogger-note-content blockquote{border-right-color:#d8111b}.footer-navigation a:hover,.footer-navigation a:focus,.footer-navigation a:active,.large-screen.navigation-classic .primary-navigation ul ul:before,.large-screen.navigation-classic .primary-navigation ul ul li:last-of-type,.large-screen.navigation-classic .secondary-navigation a:hover,.large-screen.navigation-classic .secondary-navigation a:focus,.large-screen.navigation-classic .secondary-navigation a:active{border-bottom-color:#d8111b}blockquote,body .hentry .wpcom-reblog-snapshot .reblogger-note-content blockquote{border-left-color:#d8111b}</style>
+<link rel="icon" href="https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=32" sizes="32x32" />
+<link rel="icon" href="https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=192" sizes="192x192" />
+<link rel="apple-touch-icon" href="https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=180" />
+<meta name="msapplication-TileImage" content="https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=270" />
+</head>
+
+<body class="post-template-default single single-post postid-81041 single-format-standard custom-background customizer-styles-applied has-custom-background has-footer-navigation has-header-search navigation-classic sidebar-left highlander-enabled highlander-light">
+<div id="page" class="hfeed site">
+	<a class="skip-link screen-reader-text" href="#content">Aller au contenu principal</a>
+
+	
+	<header id="masthead" class="site-header" role="banner">
+				<a href="https://yveszieba.me/" class="header-image" rel="home">
+			<img src="https://defaultcustomheadersdata.files.wordpress.com/2016/07/dch_header31.jpg?resize=1230,100" width="1230" height="100" alt="">
+		</a><!-- .header-image -->
+		
+				<div class="search-wrapper">
+			<form role="search" method="get" class="search-form" action="https://yveszieba.me/">
+				<label>
+					<span class="screen-reader-text">Rechercher&nbsp;:</span>
+					<input type="search" class="search-field" placeholder="Recherche&hellip;" value="" name="s" />
+				</label>
+				<input type="submit" class="search-submit" value="Rechercher" />
+			</form>		</div><!-- .search-wrapper -->
+		
+		<div class="header-wrapper clear">
+			<div class="site-branding">
+				<a href="https://yveszieba.me/" class="site-logo-link" rel="home" itemprop="url"></a>						<p class="site-title"><a href="https://yveszieba.me/" rel="home">When the why is clear the how is easy</a></p>
+											<p class="site-description">Digital Transformation Strategist</p>
+								</div><!-- .site-branding -->
+
+							<div id="site-navigation" class="header-navigation">
+					<button class="menu-toggle" aria-expanded="false">Menu</button>
+					<div class="navigation-wrapper clear">
+																			<nav class="primary-navigation" role="navigation">
+								<div class="menu-primary"><ul id="menu-menu-primary-navigation" class="clear"><li id="menu-item-80506" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-80506"><a href="https://yveszieba.me/">Accueil</a></li>
+<li id="menu-item-80507" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-80507"><a href="https://yveszieba.me/who-are-you-vous-etes/">You</a>
+<ul class="sub-menu">
+	<li id="menu-item-81365" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81365"><a href="https://yveszieba.me/who-are-you-vous-etes/artiste-designer/">Artiste, designer, modèle, graphiste</a></li>
+	<li id="menu-item-81394" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81394"><a href="https://yveszieba.me/services-2/strategy/partners/business-partners/">Business Partners</a></li>
+	<li id="menu-item-81368" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81368"><a href="https://yveszieba.me/who-are-you-vous-etes/vous-etes-porteurs-de-projets/">Porteurs de projets / Entrepreneur</a></li>
+	<li id="menu-item-81367" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81367"><a href="https://yveszieba.me/who-are-you-vous-etes/entreprise-corporate/">Entreprise / Corporate</a></li>
+	<li id="menu-item-81395" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81395"><a href="https://yveszieba.me/services-2/teaching/the-right-thing-to-do/invest/">Investors / Investisseurs</a></li>
+	<li id="menu-item-81366" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81366"><a href="https://yveszieba.me/who-are-you-vous-etes/associations-foundations/">Associations &amp; Foundations</a></li>
+</ul>
+</li>
+<li id="menu-item-80512" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-has-children menu-item-80512"><a href="https://yveszieba.me/my-publications/">Publications</a>
+<ul class="sub-menu">
+	<li id="menu-item-83125" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83125"><a href="https://yveszieba.me/2018/11/25/lancement-de-communautes-dinteret/">Lancement de communautés d&rsquo;intérêt</a></li>
+	<li id="menu-item-81375" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81375"><a href="https://yveszieba.me/my-publications/video/">Videos</a></li>
+	<li id="menu-item-80508" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-80508"><a href="https://yveszieba.me/marques-brands/">Websites</a></li>
+	<li id="menu-item-81370" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81370"><a href="https://yveszieba.me/services-2/services/magazines/">Magazines</a></li>
+	<li id="menu-item-81371" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-81371"><a href="https://yveszieba.me/services-2/services/">Edition de publications spécialisées</a>
+	<ul class="sub-menu">
+		<li id="menu-item-80509" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-80509"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/services-2/teaching/">Teaching</a>
+		<ul class="sub-menu">
+			<li id="menu-item-83132" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83132"><a href="https://yveszieba.me/2018/01/28/esperer-ou-renoncer/">Espérer ou renoncer ?</a></li>
+			<li id="menu-item-84526" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-84526"><a href="https://yveszieba.me/eic-accelerator-program-une-opportunite-a-saisir-pour-votre-pme/">EIC Accelerator Program, une opportunité à saisir pour votre PME.</a>
+			<ul class="sub-menu">
+				<li id="menu-item-81405" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-privacy-policy menu-item-has-children menu-item-81405"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/">Techno</a>
+				<ul class="sub-menu">
+					<li id="menu-item-81413" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81413"><a href="https://yveszieba.me/services-2/scam-stack/cloud/">Cloud (Cloud Computing)</a></li>
+				</ul>
+</li>
+			</ul>
+</li>
+			<li id="menu-item-81401" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81401"><a href="https://yveszieba.me/services-2/innovation/technologies/open-source-cms/">Open Source CMS</a></li>
+			<li id="menu-item-81412" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81412"><a href="https://yveszieba.me/services-2/scam-stack/mobile/">Mobile</a></li>
+			<li id="menu-item-81402" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-81402"><a href="https://yveszieba.me/services-2/scam-stack/">SCAM Stack</a>
+			<ul class="sub-menu">
+				<li id="menu-item-81403" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81403"><a href="https://yveszieba.me/services-2/innovation/technologies/">Technology disruptions</a></li>
+			</ul>
+</li>
+			<li id="menu-item-83126" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83126"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/2018/06/17/la-plateforme-technologique-du-grand-geneve/">La plateforme technologique du grand Genève</a></li>
+			<li id="menu-item-81376" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81376"><a href="https://yveszieba.me/services-2/teaching/course-catalog/">Course catalog</a></li>
+			<li id="menu-item-81396" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81396"><a href="https://yveszieba.me/services-2/teaching/online-courses-business-models/">Online courses business models</a></li>
+			<li id="menu-item-81397" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81397"><a href="https://yveszieba.me/services-2/teaching/mooc/">MOOC, DOCC and SPOC</a></li>
+			<li id="menu-item-81398" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81398"><a href="https://yveszieba.me/services-2/teaching/popup-campus/">Popup campus</a></li>
+			<li id="menu-item-81399" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81399"><a href="https://yveszieba.me/services-2/teaching/the-right-thing-to-do/accessibility/">Universal Design</a></li>
+			<li id="menu-item-81468" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81468"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/services-2/teaching/7-free-questions-to-ask-yourself-to-make-good-use-of-blended-learning/">7 free questions to ask yourself to make good use of blended learning</a></li>
+			<li id="menu-item-81380" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81380"><a href="https://yveszieba.me/services-2/teaching/formation-a-lentrepreneuriat-entrepreneurship-training-program/">Formation à l’entrepreneuriat / Entrepreneurship training program</a></li>
+		</ul>
+</li>
+		<li id="menu-item-81372" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81372"><a href="https://yveszieba.me/my-publications/presentations/">Présentations</a></li>
+		<li id="menu-item-81373" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81373"><a href="https://yveszieba.me/services-2/teaching/the-right-thing-to-do/lire-le-manifeste-des-tiers-lieux-francophones/">Manifeste des tiers-lieux francophones</a></li>
+		<li id="menu-item-81369" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-81369"><a href="https://yveszieba.me/my-publications/articles/digital-atelier/">Digital Atelier</a>
+		<ul class="sub-menu">
+			<li id="menu-item-80510" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-80510"><a href="https://yveszieba.me/services-2/projets-projects/">Portfolio</a></li>
+		</ul>
+</li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-80511" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-80511"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/services-2/">Services</a>
+<ul class="sub-menu">
+	<li id="menu-item-81406" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81406"><a href="https://yveszieba.me/contact/connecting-on-social-networks/reseaux/">Se trouver sur les réseaux sociaux</a></li>
+	<li id="menu-item-84577" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-84577"><a href="https://yveszieba.me/vis-ma-vie-dentrepreneur-on-peut-tous-devenir-slasher-proposition-de-stage-bachelor-master/">Vis ma vie d&#039;entrepreneur. &quot;On peut tous devenir slasher&quot;. Proposition de stage Bachelor / Master</a></li>
+	<li id="menu-item-83127" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83127"><a href="https://yveszieba.me/2018/03/22/atelier-de-design-thinking-en-entreprise/">Atelier de Design Thinking en Entreprise</a></li>
+	<li id="menu-item-83131" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83131"><a href="https://yveszieba.me/2018/02/14/media-training-aux-orateurs-chevronnes/">Media Training aux orateurs chevronnés</a></li>
+	<li id="menu-item-83129" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-has-children menu-item-83129"><a href="https://yveszieba.me/2018/02/18/reussir-linteroperatibilite/">Réussir l&rsquo;interopératibilité</a>
+	<ul class="sub-menu">
+		<li id="menu-item-83128" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83128"><a target="_blank" rel="noopener noreferrer" href="https://yveszieba.me/2018/02/23/faire-dune-pierre-trois-coups/">Faire d&rsquo;une pierre, trois coups</a></li>
+	</ul>
+</li>
+	<li id="menu-item-83136" class="menu-item menu-item-type-post_type menu-item-object-post menu-item-83136"><a href="https://yveszieba.me/2017/08/20/les-7-cles-du-succes-dun-tiers-lieu-vibrant-un-peu-plus-que-les-autres/">Les 7 clés du succès d&rsquo;un tiers-lieu vibrant un peu plus que les autres</a></li>
+	<li id="menu-item-81377" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81377"><a href="https://yveszieba.me/about-yves-zieba/strategic-agility-tough-decision-goodwill-ebitda-uncertainty/">Strategic Agility Coaching proposition</a></li>
+	<li id="menu-item-81378" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-81378"><a href="https://yveszieba.me/who-are-you-vous-etes/vous-etes-porteurs-de-projets/acquisition-de-nouvelles-opportunites-daffaires/">Acquisition de nouvelles opportunités d’affaires</a>
+	<ul class="sub-menu">
+		<li id="menu-item-81374" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81374"><a href="https://yveszieba.me/my-publications/articles/">Articles</a></li>
+		<li id="menu-item-81384" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81384"><a href="https://yveszieba.me/services-2/teaching/pourquoi-linnovation-dusage-cree-de-la-valeur-economique/">Pourquoi l’innovation d’usage créé de la valeur économique ?</a></li>
+		<li id="menu-item-81381" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81381"><a href="https://yveszieba.me/services-2/market-entry-expansion/">Market entry / Expansion</a></li>
+		<li id="menu-item-81379" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81379"><a href="https://yveszieba.me/who-are-you-vous-etes/vous-etes-porteurs-de-projets/conseils-et-analyse-de-la-viabilite-de-votre-projet/">Analyse de la viabilité de votre projet</a></li>
+		<li id="menu-item-85080" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85080"><a href="https://yveszieba.me/parcourspro/">Corporate experience</a></li>
+		<li id="menu-item-81383" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81383"><a href="https://yveszieba.me/services-2/regard-exterieur/">Regard extérieur</a></li>
+		<li id="menu-item-81382" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81382"><a href="https://yveszieba.me/services-2/accompagnement-de-lidee-au-projet/">Accompagnement de l’idée au projet</a></li>
+		<li id="menu-item-81387" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81387"><a href="https://yveszieba.me/services-2/mise-en-reseau/mise-en-reseau-des-entrepreneurs-innovants-innovation-networking/">Mise en réseau des entrepreneurs innovants / Innovation networking</a></li>
+		<li id="menu-item-81385" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81385"><a href="https://yveszieba.me/about-yves-zieba/strategic-agility-tough-decision-goodwill-ebitda-uncertainty/">Strategic Agility Coaching proposition</a></li>
+		<li id="menu-item-81400" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81400"><a href="https://yveszieba.me/services-2/strategy/ma/">Acquisition Integration</a></li>
+	</ul>
+</li>
+</ul>
+</li>
+<li id="menu-item-80513" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-80513"><a href="https://yveszieba.me/contact/">Contact</a>
+<ul class="sub-menu">
+	<li id="menu-item-81389" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81389"><a href="https://yveszieba.me/contact/telephone-phone/">Téléphone / Phone</a></li>
+	<li id="menu-item-81390" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81390"><a href="https://yveszieba.me/contact/adresse/">Adresse</a></li>
+	<li id="menu-item-81392" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-81392"><a href="https://yveszieba.me/contact/connecting-on-social-networks/">Social Media / Networks</a></li>
+	<li id="menu-item-85069" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-85069"><a href="https://yveszieba.me/a-propos/">A propos</a></li>
+</ul>
+</li>
+</ul></div>							</nav><!-- .primary-navigation -->
+											</div><!-- .navigation-wrapper -->
+				</div><!-- #site-navigation -->
+			
+							<div id="site-search" class="header-search">
+					<button class="search-toggle" aria-expanded="false"><span class="screen-reader-text">Rechercher</span></button>
+				</div><!-- #site-search -->
+					</div><!-- .header-wrapper -->
+	</header><!-- #masthead -->
+
+	<div id="content" class="site-content">
+
+	<div class="content-wrapper clear">
+
+		<div id="primary" class="content-area">
+			<main id="main" class="site-main" role="main">
+
+				
+					
+<article id="post-81041" class="post-81041 post type-post status-publish format-standard has-post-thumbnail hentry category-business-acumen category-business-ethics category-business-model category-business-stamina category-education tag-ayurveda tag-business-stamina tag-chakra tag-commercial-acumen tag-diy tag-empathy tag-energy tag-entrepreneurship tag-how-to tag-initiative tag-judgment tag-klout tag-lbs tag-leadership tag-listening tag-london-business-school tag-machine-learning tag-managerial-acumen tag-meditation tag-mindset tag-peerindex tag-progressive tag-reputation-management tag-sing tag-social-skills tag-song tag-throat tag-tips tag-tips-and-tricks tag-tricks tag-voice fallback-thumbnail">
+	<header class="entry-header">
+		<h1 class="entry-title">5 Tips to develop your business stamina&nbsp;yourself</h1>
+		<div class="entry-meta">
+			<span class="posted-on">Publié le <a href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" rel="bookmark"><time class="entry-date published" datetime="2016-09-23T20:36:37+00:00">2016-09-23</time><time class="updated" datetime="2016-09-23T20:36:38+00:00">2016-09-23</time></a></span><span class="byline"> par <span class="author vcard"><a class="url fn n" href="https://yveszieba.me/author/yveszieba/">Yves Zieba</a></span></span>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	
+	<a class="post-thumbnail" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/">
+		<img width="648" height="458" src="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=648" class="attachment-edin-featured-image size-edin-featured-image wp-post-image" alt="" loading="lazy" srcset="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=648 648w, https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=150 150w, https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=300 300w, https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=768 768w, https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg 900w" sizes="(max-width: 648px) 100vw, 648px" data-attachment-id="81079" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/psychedelic_chakras_by_sahas_hegde-d4loxpy/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg" data-orig-size="900,636" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="psychedelic_chakras_by_sahas_hegde-d4loxpy" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?w=648" />	</a>
+
+
+	<div class="entry-content">
+		<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><img loading="lazy" data-attachment-id="81059" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/telechargement/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg" data-orig-size="275,183" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="telechargement" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg?w=275" data-large-file="https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg?w=275" class="alignnone  wp-image-81059" src="https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg?w=389&#038;h=259" alt="telechargement" width="389" height="259" srcset="https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg 275w, https://yveszieba.files.wordpress.com/2016/09/tc3a9lc3a9chargement.jpg?w=150&amp;h=100 150w" sizes="(max-width: 389px) 100vw, 389px" /></span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">You might typically hear about business stamina during performance reviews, during team meetings with marketing and sales directors, when times get difficult, or when you are running behind your targets. Very few people actually know about the business stamina meaning and even less of us, know about ways to develop our business stamina ourselves.</span></span></p>
+<blockquote><p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">« You don&rsquo;t have enough business stamina ! »</span></span></p></blockquote>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">Have you ever heard this comment ? Did you really understand what was meant ? How can you tell whether it is true ? What should you do differently ? Why suddenly a director finds it important ?. How can we make it an actionable feedback ? Does it have to do with sport, breathing or fitness ? Do you want to get better at it ? I do. So I made some research and here are my 5 tips for you.</span></span></p>
+<p><img loading="lazy" data-attachment-id="81066" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/jogging-at-sunset-1461853562jau/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg" data-orig-size="1920,1258" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="jogging-at-sunset-1461853562jau" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=648" class="alignnone  wp-image-81066" src="https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=467&#038;h=306" alt="jogging-at-sunset-1461853562jau" width="467" height="306" srcset="https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=467&amp;h=306 467w, https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=934&amp;h=612 934w, https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=150&amp;h=98 150w, https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=300&amp;h=197 300w, https://yveszieba.files.wordpress.com/2016/09/jogging-at-sunset-1461853562jau.jpg?w=768&amp;h=503 768w" sizes="(max-width: 467px) 100vw, 467px" /></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><strong>Tip #1.</strong> Understand why « business stamina » is important ?</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">It is not written anywhere in your objectives, it is not mentioned in your recruitment interview, it is not said in « one to one » session with your manager, but in most companies, it is expected from you. Displaying stamina reassures everyone and it is widely assimilated as commitment, energy, efficiency, results, success, positive attitude… So stamina is good for you, it is good for your next performance review, for your career, for your next important customer meeting and for your next salary negotiation !</span></span></p>
+<blockquote><p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">Are you fit enough ?</span></span></p></blockquote>
+<p><img loading="lazy" data-attachment-id="81070" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/9570898902_7a17ebed6c_b/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg" data-orig-size="1024,683" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="9570898902_7a17ebed6c_b" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=648" class="alignnone  wp-image-81070" src="https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=437&#038;h=292" alt="9570898902_7a17ebed6c_b" width="437" height="292" srcset="https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=437&amp;h=292 437w, https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=874&amp;h=584 874w, https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=150&amp;h=100 150w, https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=300&amp;h=200 300w, https://yveszieba.files.wordpress.com/2016/09/9570898902_7a17ebed6c_b.jpg?w=768&amp;h=512 768w" sizes="(max-width: 437px) 100vw, 437px" /></p>
+<p>&nbsp;</p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><strong>Tip #2</strong>. Start to practice now ! It takes time to be instantly successful ! </span></span></p>
+<blockquote><p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">« Instant Success takes a really long time, <span style="color:#212121;">so work on your stamina !». </span></span></span></p></blockquote>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><span style="color:#212121;">See this great inspirational video from LBS / PeerIndex to understand</span> what we mean here to learn about the journey, the iterations, the use of machine learning technologies and the strategic pivots before reaching the point of what looks like an « instant success » (PeerIndex acquisition)</span></span></p>
+<p><a href="https://www.youtube.com/watch?v=eHZkBfng4-M&amp;feature=youtu.be"><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">https://www.youtube.com/watch?v=eHZkBfng4-M&amp;feature=youtu.be</span></span></a></p>
+<p><img loading="lazy" data-attachment-id="81073" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/9552037779_4f520fc4b3_b/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg" data-orig-size="790,790" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="9552037779_4f520fc4b3_b" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=648" class="alignnone  wp-image-81073" src="https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=423&#038;h=423" alt="9552037779_4f520fc4b3_b" width="423" height="423" srcset="https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=423&amp;h=423 423w, https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=150&amp;h=150 150w, https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=300&amp;h=300 300w, https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg?w=768&amp;h=768 768w, https://yveszieba.files.wordpress.com/2016/09/9552037779_4f520fc4b3_b.jpg 790w" sizes="(max-width: 423px) 100vw, 423px" /></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><strong>Tip #3</strong>. Learn how stamina supplements business acumen and entrepreneurial mindset</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">Stamina alone is not sufficient. It becomes powerful when combined with the entrepreneurship mindset and a strong business acumen (your ability to understand, analyse and comment a business situation, and convert it into an opportunity, even in turbulent times or in crisis situation). </span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">The underlying competences on which you can work include progressive and visionary leadership, applying your knowledge and your judgment to a variety of industry, based on facts and data, driving the business forward through initiatives, and most importantly developing and using your social skills (listening, open questions, empathy, …) on every possible occasion.</span></span></p>
+<p><a href="https://www.entrepreneur.com/article/237673"><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">https://www.entrepreneur.com/article/237673</span></span></a></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><strong>Tip #4</strong>. Understand why meditation helps you be more productive</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">Have you ever wondered why so many entrepreneurs are super-keen on meditation, mindfulness and consciousness! </span></span><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">They have understood why it can be useful for their personal and business success. Both are tightly interdependent.</span></span></p>
+<p><a href="http://ventureinsider.club/146/how-to-boost-your-business-stamina/"><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">http://ventureinsider.club/146/how-to-boost-your-business-stamina/</span></span></a></p>
+<p><img loading="lazy" data-attachment-id="81076" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/meditation-by-the-lake-55721299753723ly4/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg" data-orig-size="1280,857" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="meditation-by-the-lake-55721299753723ly4" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=648" class="alignnone  wp-image-81076" src="https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=454&#038;h=304" alt="meditation-by-the-lake-55721299753723ly4" width="454" height="304" srcset="https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=454&amp;h=304 454w, https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=908&amp;h=608 908w, https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=150&amp;h=100 150w, https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=300&amp;h=201 300w, https://yveszieba.files.wordpress.com/2016/09/meditation-by-the-lake-55721299753723ly4.jpg?w=768&amp;h=514 768w" sizes="(max-width: 454px) 100vw, 454px" /></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><strong>Tip #5</strong> – Don&rsquo;t underestimate the importance of your voice in your perceived business stamina</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><span style="color:#000000;">Learn about the throat chakra, </span><span style="color:#000000;">learn about Ayurveda. </span><span style="color:#000000;">Go out and sing </span><span style="color:#000000;">what you like</span><span style="color:#000000;">, and join the theatre or improvisation club next door !</span></span></span></p>
+<p><img loading="lazy" data-attachment-id="81095" data-permalink="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/george_-corpsegrinder-_fisher_of_cannibal_corpse/" data-orig-file="https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg" data-orig-size="800,533" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;3.2&quot;,&quot;credit&quot;:&quot;unknown&quot;,&quot;camera&quot;:&quot;Canon EOS DIGITAL REBEL XT&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1266783107&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;70&quot;,&quot;iso&quot;:&quot;1600&quot;,&quot;shutter_speed&quot;:&quot;0.00625&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="george_-corpsegrinder-_fisher_of_cannibal_corpse" data-image-description="" data-medium-file="https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=300" data-large-file="https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=648" class="alignnone  wp-image-81095" src="https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=422&#038;h=281" alt="george_-corpsegrinder-_fisher_of_cannibal_corpse" width="422" height="281" srcset="https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=422&amp;h=281 422w, https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=150&amp;h=100 150w, https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=300&amp;h=200 300w, https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg?w=768&amp;h=512 768w, https://yveszieba.files.wordpress.com/2016/09/george_-corpsegrinder-_fisher_of_cannibal_corpse.jpg 800w" sizes="(max-width: 422px) 100vw, 422px" /></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">More info on Chakras</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><a href="http://www.auraphoto.com//products/WinAura/WinAuraExample.html">http://www.auraphoto.com//products/WinAura/WinAuraExample.html</a></span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;">More info on Ayurveda</span></span></p>
+<p><span style="font-family:Arial, sans-serif;"><span style="font-size:small;"><a href="http://www.alwaysayurveda.com/stamina-and-endurance/">http://www.alwaysayurveda.com/stamina-and-endurance/</a></span></span></p>
+<p>If you want to develop your business stamina further, get in touch !</p>
+<div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon sd-sharing"><h3 class="sd-title">Partager&nbsp;:</h3><div class="sd-content"><ul><li class="share-twitter"><a rel="nofollow noopener noreferrer" data-shared="sharing-twitter-81041" class="share-twitter sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=twitter" target="_blank" title="Cliquez pour partager sur Twitter"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Twitter(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer" data-shared="sharing-facebook-81041" class="share-facebook sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=facebook" target="_blank" title="Cliquez pour partager sur Facebook"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Facebook(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-pinterest"><a rel="nofollow noopener noreferrer" data-shared="sharing-pinterest-81041" class="share-pinterest sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=pinterest" target="_blank" title="Cliquez pour partager sur Pinterest"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Pinterest(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-linkedin"><a rel="nofollow noopener noreferrer" data-shared="sharing-linkedin-81041" class="share-linkedin sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=linkedin" target="_blank" title="Cliquez pour partager sur LinkedIn"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur LinkedIn(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-reddit"><a rel="nofollow noopener noreferrer" data-shared="" class="share-reddit sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=reddit" target="_blank" title="Cliquez pour partager sur Reddit"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Reddit(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-email"><a rel="nofollow noopener noreferrer" data-shared="" class="share-email sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=email" target="_blank" title="Cliquez pour envoyer par e-mail à un ami"><span></span><span class="sharing-screen-reader-text">Cliquez pour envoyer par e-mail à un ami(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-print"><a rel="nofollow noopener noreferrer" data-shared="" class="share-print sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/#print" target="_blank" title="Cliquer pour imprimer"><span></span><span class="sharing-screen-reader-text">Cliquer pour imprimer(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-tumblr"><a rel="nofollow noopener noreferrer" data-shared="" class="share-tumblr sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=tumblr" target="_blank" title="Cliquez pour partager sur Tumblr"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Tumblr(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-pocket"><a rel="nofollow noopener noreferrer" data-shared="" class="share-pocket sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=pocket" target="_blank" title="Cliquez pour partager sur Pocket"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Pocket(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-telegram"><a rel="nofollow noopener noreferrer" data-shared="" class="share-telegram sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=telegram" target="_blank" title="Cliquez pour partager sur Telegram"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Telegram(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-jetpack-whatsapp"><a rel="nofollow noopener noreferrer" data-shared="" class="share-jetpack-whatsapp sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=jetpack-whatsapp" target="_blank" title="Cliquez pour partager sur WhatsApp"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur WhatsApp(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-skype"><a rel="nofollow noopener noreferrer" data-shared="sharing-skype-81041" class="share-skype sd-button share-icon no-text" href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/?share=skype" target="_blank" title="Cliquez pour partager sur Skype"><span></span><span class="sharing-screen-reader-text">Cliquez pour partager sur Skype(ouvre dans une nouvelle fenêtre)</span></a></li><li class="share-end"></li></ul></div></div></div><div class='sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded' id='like-post-wrapper-24415255-81041-5f62043822f71' data-src='//widgets.wp.com/likes/index.html?ver=20200826#blog_id=24415255&amp;post_id=81041&amp;origin=yveszieba.wordpress.com&amp;obj_id=24415255-81041-5f62043822f71&amp;domain=yveszieba.me' data-name='like-post-frame-24415255-81041-5f62043822f71'><h3 class='sd-title'>WordPress:</h3><div class='likes-widget-placeholder post-likes-widget-placeholder' style='height: 55px;'><span class='button'><span>J&#039;aime</span></span> <span class="loading">chargement&hellip;</span></div><span class='sd-text-color'></span><a class='sd-link-color'></a></div>
+<div id='jp-relatedposts' class='jp-relatedposts' >
+	<h3 class="jp-relatedposts-headline"><em>Articles similaires</em></h3>
+</div></div>	</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+		<span class="cat-links">Posté dans <a href="https://yveszieba.me/category/business-acumen/" rel="category tag">Business Acumen</a>, <a href="https://yveszieba.me/category/business-ethics/" rel="category tag">Business Ethics</a>, <a href="https://yveszieba.me/category/business-model/" rel="category tag">Business Model</a>, <a href="https://yveszieba.me/category/business-stamina/" rel="category tag">Business stamina</a>, <a href="https://yveszieba.me/category/education/" rel="category tag">Education</a></span><span class="tags-links">Tagué <a href="https://yveszieba.me/tag/ayurveda/" rel="tag">ayurveda</a>, <a href="https://yveszieba.me/tag/business-stamina/" rel="tag">Business stamina</a>, <a href="https://yveszieba.me/tag/chakra/" rel="tag">chakra</a>, <a href="https://yveszieba.me/tag/commercial-acumen/" rel="tag">commercial acumen</a>, <a href="https://yveszieba.me/tag/diy/" rel="tag">DIY</a>, <a href="https://yveszieba.me/tag/empathy/" rel="tag">empathy</a>, <a href="https://yveszieba.me/tag/energy/" rel="tag">energy</a>, <a href="https://yveszieba.me/tag/entrepreneurship/" rel="tag">entrepreneurship</a>, <a href="https://yveszieba.me/tag/how-to/" rel="tag">how to</a>, <a href="https://yveszieba.me/tag/initiative/" rel="tag">initiative</a>, <a href="https://yveszieba.me/tag/judgment/" rel="tag">judgment</a>, <a href="https://yveszieba.me/tag/klout/" rel="tag">Klout</a>, <a href="https://yveszieba.me/tag/lbs/" rel="tag">LBS</a>, <a href="https://yveszieba.me/tag/leadership/" rel="tag">leadership</a>, <a href="https://yveszieba.me/tag/listening/" rel="tag">listening</a>, <a href="https://yveszieba.me/tag/london-business-school/" rel="tag">London Business School</a>, <a href="https://yveszieba.me/tag/machine-learning/" rel="tag">machine learning</a>, <a href="https://yveszieba.me/tag/managerial-acumen/" rel="tag">managerial acumen</a>, <a href="https://yveszieba.me/tag/meditation/" rel="tag">meditation</a>, <a href="https://yveszieba.me/tag/mindset/" rel="tag">mindset</a>, <a href="https://yveszieba.me/tag/peerindex/" rel="tag">PeerIndex</a>, <a href="https://yveszieba.me/tag/progressive/" rel="tag">progressive</a>, <a href="https://yveszieba.me/tag/reputation-management/" rel="tag">reputation management</a>, <a href="https://yveszieba.me/tag/sing/" rel="tag">sing</a>, <a href="https://yveszieba.me/tag/social-skills/" rel="tag">social skills</a>, <a href="https://yveszieba.me/tag/song/" rel="tag">song</a>, <a href="https://yveszieba.me/tag/throat/" rel="tag">throat</a>, <a href="https://yveszieba.me/tag/tips/" rel="tag">tips</a>, <a href="https://yveszieba.me/tag/tips-and-tricks/" rel="tag">tips and tricks</a>, <a href="https://yveszieba.me/tag/tricks/" rel="tag">tricks</a>, <a href="https://yveszieba.me/tag/voice/" rel="tag">voice</a></span>	</footer><!-- .entry-footer -->
+</article><!-- #post-## -->
+
+						<nav class="navigation post-navigation" role="navigation">
+		<h2 class="screen-reader-text">Navigation des articles</h2>
+		<div class="nav-links">
+			<div class="nav-previous"><a href="https://yveszieba.me/2016/09/18/communiquer-efficacement/" rel="prev"><span class="meta-nav">&larr;</span> Communiquer efficacement</a></div><div class="nav-next"><a href="https://yveszieba.me/2016/10/25/conference-lors-du-carrefour-des-createurs/" rel="next">Conférence lors du Carrefour des&nbsp;Créateurs <span class="meta-nav">&rarr;</span></a></div>		</div><!-- .nav-links -->
+	</nav><!-- .navigation -->
+	
+					
+				
+			</main><!-- #main -->
+		</div><!-- #primary -->
+
+
+		<div id="secondary" class="widget-area" role="complementary">
+				<aside id="google_translate_widget-2" class="widget widget_google_translate_widget"><div id="google_translate_element"></div></aside><aside id="blog-stats-5" class="widget widget_blog-stats"><h2 class="widget-title">Statistiques du blog</h2>		<ul>
+			<li>14&nbsp;427 hits</li>
+		</ul>
+		</aside><aside id="linkcat-10923" class="widget widget_links"><h2 class="widget-title">CV</h2>
+	<ul class='xoxo blogroll'>
+<li><a href="http://ch.linkedin.com/in/customercentricorganisation" title="My linkedIN profile">LinkedIN profile</a></li>
+
+	</ul>
+</aside>
+<aside id="top-posts-4" class="widget widget_top-posts"><h2 class="widget-title">Articles Phares</h2><ul class='widgets-list-layout no-grav'>
+					<li>
+						<a href="https://yveszieba.me/2020/02/01/rendez-vous-pour-sauver-les-oceans-et-la-biodiversite-marine/" title="Rendez-vous pour sauver les océans et la biodiversité marine" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2020/02/pexels-photo-1295138.jpeg?w=1200&#038;resize=40%2C40" alt="Rendez-vous pour sauver les océans et la biodiversité marine" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/2020/02/01/rendez-vous-pour-sauver-les-oceans-et-la-biodiversite-marine/" title="Rendez-vous pour sauver les océans et la biodiversité marine" class="bump-view" data-bump-view="tp">Rendez-vous pour sauver les océans et la biodiversité marine</a>
+							</div>
+													</li>
+										<li>
+						<a href="https://yveszieba.me/2017/08/20/les-7-cles-du-succes-dun-tiers-lieu-vibrant-un-peu-plus-que-les-autres/" title="Les 7 clés du succès d&#039;un tiers-lieu vibrant un peu plus que les autres" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2017/08/20170818_120154.jpg?w=1200&#038;resize=40%2C40" alt="Les 7 clés du succès d&#039;un tiers-lieu vibrant un peu plus que les autres" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/2017/08/20/les-7-cles-du-succes-dun-tiers-lieu-vibrant-un-peu-plus-que-les-autres/" title="Les 7 clés du succès d&#039;un tiers-lieu vibrant un peu plus que les autres" class="bump-view" data-bump-view="tp">Les 7 clés du succès d&#039;un tiers-lieu vibrant un peu plus que les autres</a>
+							</div>
+													</li>
+										<li>
+						<a href="https://yveszieba.me/2015/12/05/avez-vous-le-sens-du-beau/" title="Avez vous le sens du beau ?" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2015/12/cee83e68214aee9c0f7dea59bdd2b881.jpg?resize=40%2C40" alt="Avez vous le sens du beau ?" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/2015/12/05/avez-vous-le-sens-du-beau/" title="Avez vous le sens du beau ?" class="bump-view" data-bump-view="tp">Avez vous le sens du beau ?</a>
+							</div>
+													</li>
+										<li>
+						<a href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" title="5 Tips to develop your business stamina yourself" class="bump-view" data-bump-view="tp" aria-current="page">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2016/09/psychedelic_chakras_by_sahas_hegde-d4loxpy.jpg?resize=40%2C40" alt="5 Tips to develop your business stamina yourself" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" title="5 Tips to develop your business stamina yourself" class="bump-view" data-bump-view="tp" aria-current="page">5 Tips to develop your business stamina yourself</a>
+							</div>
+													</li>
+										<li>
+						<a href="https://yveszieba.me/2016/01/17/were-moocs-just-a-buzz/" title="Were MOOCs just a buzz ?" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2016/01/learning.jpg?resize=40%2C40" alt="Were MOOCs just a buzz ?" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/2016/01/17/were-moocs-just-a-buzz/" title="Were MOOCs just a buzz ?" class="bump-view" data-bump-view="tp">Were MOOCs just a buzz ?</a>
+							</div>
+													</li>
+					</ul>
+</aside>
+		<aside id="recent-posts-4" class="widget widget_recent_entries">
+		<h2 class="widget-title">Articles récents</h2>
+		<ul>
+											<li>
+					<a href="https://yveszieba.me/2020/06/14/un-hackathon-100-en-ligne-cest-possible-et-cest-meme-fort-agreable/">Un hackathon 100% en ligne ? c&rsquo;est possible et c&rsquo;est même fort&nbsp;agréable.</a>
+											<span class="post-date">2020-06-14</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/04/29/aujourdhui-je-dois-appeler-mon-plus-gros-client-et-je-suis-en-slip/">Aujourd&rsquo;hui, je dois appeler mon plus gros client et je suis en slip&nbsp;!!!</a>
+											<span class="post-date">2020-04-29</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/03/16/souriez-vous-teletravaillez/">Souriez, vous télétravaillez&nbsp;!!!</a>
+											<span class="post-date">2020-03-16</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/03/14/lecole-a-la-maison-quelles-ressources-pour-les-parents/">L&rsquo;école à la maison, quelles ressources pour les parents&nbsp;?</a>
+											<span class="post-date">2020-03-14</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/03/13/chouette-un-combo-teletravail-home-schooling/">Chouette, un combo &laquo;&nbsp;Télétravail / home-schooling&nbsp;&raquo; !</a>
+											<span class="post-date">2020-03-13</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/03/06/comment-saisir-les-opportunites-liees-au-covid19/">Comment saisir les opportunités liées au COVID19&nbsp;?</a>
+											<span class="post-date">2020-03-06</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/02/27/3-raisons-de-se-rejouir-de-larrivee-du-printemps/">3 raisons de se réjouir de l&rsquo;arrivée du&nbsp;printemps</a>
+											<span class="post-date">2020-02-27</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/02/15/parce-que-3-pilotes-valent-mieux-quun/">Parce que 3 pilotes valent mieux qu&rsquo;un&nbsp;!</a>
+											<span class="post-date">2020-02-15</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2020/02/01/rendez-vous-pour-sauver-les-oceans-et-la-biodiversite-marine/">Rendez-vous pour sauver les océans et la biodiversité&nbsp;marine</a>
+											<span class="post-date">2020-02-01</span>
+									</li>
+											<li>
+					<a href="https://yveszieba.me/2019/12/21/cinq-ans-dapprentissage/">Un apprentissage de 5&nbsp;ans</a>
+											<span class="post-date">2019-12-21</span>
+									</li>
+					</ul>
+
+		</aside><aside id="blog_subscription-3" class="widget widget_blog_subscription jetpack_subscription_widget"><h2 class="widget-title"><label for="subscribe-field">Souscription au Blog par Email</label></h2>
+			<form
+				action="https://subscribe.wordpress.com"
+				method="post"
+				accept-charset="utf-8"
+				id=""
+			>
+									<p>Entrez votre adresse mail pour suivre ce blog et être notifié par email des nouvelles publications.</p>
+						<div class="jetpack-subscribe-count">
+							<p>
+							Rejoignez 13&nbsp;554 autres abonnés							</p>
+						</div>
+											<p id="subscribe-email">
+						<input
+								type="text"
+								name="email"
+								
+								style="width: 95%; padding: 1px 10px"
+								placeholder="Entrez votre adresse e-mail"
+								value=""
+								id=""
+							/>					</p>
+				
+				<p id="subscribe-submit">
+                    <input type="hidden" name="action" value="subscribe"/>
+                    <input type="hidden" name="blog_id" value="24415255"/>
+                    <input type="hidden" name="source" value="https://yveszieba.me/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/"/>
+                    <input type="hidden" name="sub-type" value="widget"/>
+                    <input type="hidden" name="redirect_fragment" value="blog_subscription-3"/>
+					<input type="hidden" id="_wpnonce" name="_wpnonce" value="288b1a59da" />                    <button type="submit"
+	                    		                	                >
+	                    Suivre                    </button>
+                </p>
+            </form>
+			
+</aside><aside id="tag_cloud-4" class="widget widget_tag_cloud"><h2 class="widget-title">Blog</h2><div style="overflow: hidden;"><a href="https://yveszieba.me/category/agile/" style="font-size: 94.666666666667%; padding: 1px; margin: 1px;"  title="Agile (13)">Agile</a> <a href="https://yveszieba.me/category/business-ethics/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="Business Ethics (9)">Business Ethics</a> <a href="https://yveszieba.me/category/business-model/" style="font-size: 105.66666666667%; padding: 1px; margin: 1px;"  title="Business Model (16)">Business Model</a> <a href="https://yveszieba.me/category/collaboration/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="collaboration (10)">collaboration</a> <a href="https://yveszieba.me/category/communication/" style="font-size: 105.66666666667%; padding: 1px; margin: 1px;"  title="communication (16)">communication</a> <a href="https://yveszieba.me/category/corporate-responsibility/community/" style="font-size: 102%; padding: 1px; margin: 1px;"  title="Community (15)">Community</a> <a href="https://yveszieba.me/category/creation/" style="font-size: 102%; padding: 1px; margin: 1px;"  title="Creation (15)">Creation</a> <a href="https://yveszieba.me/category/curiosity/" style="font-size: 94.666666666667%; padding: 1px; margin: 1px;"  title="Curiosity (13)">Curiosity</a> <a href="https://yveszieba.me/category/open-innovation/design-thinking/" style="font-size: 94.666666666667%; padding: 1px; margin: 1px;"  title="Design Thinking (13)">Design Thinking</a> <a href="https://yveszieba.me/category/education/" style="font-size: 300%; padding: 1px; margin: 1px;"  title="Education (69)">Education</a> <a href="https://yveszieba.me/category/effectuation/" style="font-size: 87.333333333333%; padding: 1px; margin: 1px;"  title="Effectuation (11)">Effectuation</a> <a href="https://yveszieba.me/category/entrepreneuriat/" style="font-size: 131.33333333333%; padding: 1px; margin: 1px;"  title="entrepreneuriat (23)">entrepreneuriat</a> <a href="https://yveszieba.me/category/corporate-responsibility/ethics/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="Ethics (10)">Ethics</a> <a href="https://yveszieba.me/tag/fablab/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="fablab (9)">fablab</a> <a href="https://yveszieba.me/category/open-innovation/fabrication/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="Fabrication (9)">Fabrication</a> <a href="https://yveszieba.me/category/francais-2/" style="font-size: 91%; padding: 1px; margin: 1px;"  title="Français (12)">Français</a> <a href="https://yveszieba.me/category/corporate-responsibility/governance/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="Governance (9)">Governance</a> <a href="https://yveszieba.me/category/corporate-responsibility/green/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="Green (10)">Green</a> <a href="https://yveszieba.me/category/humanites-digitales/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="Humanités digitales (10)">Humanités digitales</a> <a href="https://yveszieba.me/category/idees/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="idées (10)">idées</a> <a href="https://yveszieba.me/category/innovation/" style="font-size: 197.33333333333%; padding: 1px; margin: 1px;"  title="Innovation (41)">Innovation</a> <a href="https://yveszieba.me/category/iot/" style="font-size: 91%; padding: 1px; margin: 1px;"  title="IOT (12)">IOT</a> <a href="https://yveszieba.me/category/ludique/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="Ludique (10)">Ludique</a> <a href="https://yveszieba.me/category/business-model/modele-economique-business-model/" style="font-size: 87.333333333333%; padding: 1px; margin: 1px;"  title="Modèle économique (11)">Modèle économique</a> <a href="https://yveszieba.me/category/open-innovation/" style="font-size: 105.66666666667%; padding: 1px; margin: 1px;"  title="Open Innovation (16)">Open Innovation</a> <a href="https://yveszieba.me/category/open-model/" style="font-size: 83.666666666667%; padding: 1px; margin: 1px;"  title="Open Model (10)">Open Model</a> <a href="https://yveszieba.me/category/outils/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="Outils (9)">Outils</a> <a href="https://yveszieba.me/category/sens-du-beau/" style="font-size: 80%; padding: 1px; margin: 1px;"  title="Sens du beau (9)">Sens du beau</a> <a href="https://yveszieba.me/category/strategie/" style="font-size: 87.333333333333%; padding: 1px; margin: 1px;"  title="stratégie (11)">stratégie</a> <a href="https://yveszieba.me/category/technologie/" style="font-size: 91%; padding: 1px; margin: 1px;"  title="Technologie (12)">Technologie</a> </div></aside><aside id="categories-5" class="widget widget_categories"><h2 class="widget-title">Blog Catégorie</h2><form action="https://yveszieba.me" method="get"><label class="screen-reader-text" for="cat">Blog Catégorie</label><select  name='cat' id='cat' class='postform' >
+	<option value='-1'>Sélectionner une catégorie</option>
+	<option class="level-0" value="102576852">3D Printing Industry&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="3471">Accessibility&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="326270015">Adresse/Address&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="4796849">Advanced Robotics&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="11287">Agile&nbsp;&nbsp;(13)</option>
+	<option class="level-0" value="27371">économie&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="91">Blogging&nbsp;&nbsp;(1)</option>
+	<option class="level-1" value="646">&nbsp;&nbsp;&nbsp;CMS&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="718044">Blue Economy&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="3193299">Brain-Computer Interfaces&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="192645">Business Acumen&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="87943">Business Ethics&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="13799">Business Model&nbsp;&nbsp;(16)</option>
+	<option class="level-1" value="36962402">&nbsp;&nbsp;&nbsp;Modèle économique&nbsp;&nbsp;(11)</option>
+	<option class="level-0" value="76216878">Business stamina&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="357290803">classe inclusive&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="24405894">Cloud&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="15888">collaboration&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="1214">communication&nbsp;&nbsp;(16)</option>
+	<option class="level-0" value="338470678">Conception Universelle de l&rsquo;Apprentissage&nbsp;&nbsp;(7)</option>
+	<option class="level-0" value="31570893">Connected Cars&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="8782">Contact&nbsp;&nbsp;(2)</option>
+	<option class="level-0" value="113">Content&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="38966">Corporate Responsibility&nbsp;&nbsp;(24)</option>
+	<option class="level-1" value="436873">&nbsp;&nbsp;&nbsp;Code of Conduct&nbsp;&nbsp;(5)</option>
+	<option class="level-1" value="2528">&nbsp;&nbsp;&nbsp;Community&nbsp;&nbsp;(15)</option>
+	<option class="level-1" value="8289">&nbsp;&nbsp;&nbsp;Ethics&nbsp;&nbsp;(10)</option>
+	<option class="level-1" value="16505">&nbsp;&nbsp;&nbsp;Governance&nbsp;&nbsp;(9)</option>
+	<option class="level-1" value="17997">&nbsp;&nbsp;&nbsp;Green&nbsp;&nbsp;(10)</option>
+	<option class="level-1" value="34423">&nbsp;&nbsp;&nbsp;Workplace&nbsp;&nbsp;(7)</option>
+	<option class="level-0" value="694480403">COVID19&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="26143">Creation&nbsp;&nbsp;(15)</option>
+	<option class="level-0" value="609795">Crowdfunding&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="201845">Crowdsourcing&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="74721998">crowdsupport&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="3638">Curiosity&nbsp;&nbsp;(13)</option>
+	<option class="level-0" value="40805641">Découpe laser&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="175259">développement durable&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="1131271">Deep Learning&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="1342">Education&nbsp;&nbsp;(69)</option>
+	<option class="level-0" value="2710492">Effectuation&nbsp;&nbsp;(11)</option>
+	<option class="level-0" value="194605">entrepreneuriat&nbsp;&nbsp;(23)</option>
+	<option class="level-0" value="151462">fablab&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="707564">Français&nbsp;&nbsp;(12)</option>
+	<option class="level-0" value="1256">Gaming&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="2306">Golf&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="9931726">Gravure laser&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="54362596">Humanités digitales&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="35">Humour&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="70045">idées&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="99930">Incubator&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="186">Innovation&nbsp;&nbsp;(41)</option>
+	<option class="level-0" value="134004">Intelligence artificielle&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="411209426">Interlieux&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="2121118">IOT&nbsp;&nbsp;(12)</option>
+	<option class="level-0" value="7885">leadership&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="3281071">living lab&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="540555">Ludique&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="343490">M2M&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="4236">management&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="103613">Mergers and Acquisitions&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="120">Mobile&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="42231">Mode&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="9489678">MOOC&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="3093498">Natural User Interface&nbsp;&nbsp;(2)</option>
+	<option class="level-0" value="113491">nuit&nbsp;&nbsp;(2)</option>
+	<option class="level-0" value="31235667">objet connecté&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="875456">Open Innovation&nbsp;&nbsp;(16)</option>
+	<option class="level-1" value="64147">&nbsp;&nbsp;&nbsp;Design Thinking&nbsp;&nbsp;(13)</option>
+	<option class="level-1" value="94030">&nbsp;&nbsp;&nbsp;Fabrication&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="51536682">Open Model&nbsp;&nbsp;(10)</option>
+	<option class="level-0" value="419266305">Open robotique&nbsp;&nbsp;(7)</option>
+	<option class="level-0" value="35182001">Open source&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="11886">Outils&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="6061869">Performance commerciale&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="25369">Profil&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="350999">réseaux sociaux&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="340215">résilience&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="5536">Robots&nbsp;&nbsp;(8)</option>
+	<option class="level-0" value="9559353">Self driving cars&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="441339097">Sens du beau&nbsp;&nbsp;(9)</option>
+	<option class="level-0" value="4913404">Smart Building&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="1103349">smart city&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="4758708">Smart Machines&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="6567965">Smart Mobility&nbsp;&nbsp;(6)</option>
+	<option class="level-0" value="104624">STEM&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="58017">stratégie&nbsp;&nbsp;(11)</option>
+	<option class="level-0" value="8553">strategy&nbsp;&nbsp;(3)</option>
+	<option class="level-0" value="4399">Technologie&nbsp;&nbsp;(12)</option>
+	<option class="level-0" value="6">Technology&nbsp;&nbsp;(6)</option>
+	<option class="level-1" value="18949">&nbsp;&nbsp;&nbsp;Virtual Reality&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="75114810">Tiers Lieu&nbsp;&nbsp;(7)</option>
+	<option class="level-0" value="109530">Tourisme&nbsp;&nbsp;(5)</option>
+	<option class="level-0" value="1">Uncategorized&nbsp;&nbsp;(1)</option>
+	<option class="level-0" value="212249586">Universal Design&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="20330639">Vidéos éducatives&nbsp;&nbsp;(4)</option>
+	<option class="level-0" value="280368659">Yves Zieba Mise à jour de notre catalogue de cours.&nbsp;&nbsp;(1)</option>
+</select>
+</form>
+<script type="text/javascript">
+/* <![CDATA[ */
+(function() {
+	var dropdown = document.getElementById( "cat" );
+	function onCatChange() {
+		if ( dropdown.options[ dropdown.selectedIndex ].value > 0 ) {
+			dropdown.parentNode.submit();
+		}
+	}
+	dropdown.onchange = onCatChange;
+})();
+/* ]]> */
+</script>
+
+			</aside><aside id="top-posts-5" class="widget widget_top-posts"><h2 class="widget-title">Pages Phares</h2><ul class='widgets-list-layout no-grav'>
+					<li>
+						<a href="https://yveszieba.me/" title="Yves Zieba" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2020/03/corporate.jpg?w=1200&#038;resize=40%2C40" alt="Yves Zieba" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/" title="Yves Zieba" class="bump-view" data-bump-view="tp">Yves Zieba</a>
+							</div>
+													</li>
+										<li>
+						<a href="https://yveszieba.me/who-are-you-vous-etes/vous-etes-porteurs-de-projets/conseils-et-analyse-de-la-viabilite-de-votre-projet/" title="Analyse de la viabilité de votre projet" class="bump-view" data-bump-view="tp">
+								<img width="40" height="40" src="https://yveszieba.files.wordpress.com/2020/02/cropped-tg_200123_tesla_6363.jpg?w=40" alt="Analyse de la viabilité de votre projet" data-pin-nopin="true" class="widgets-list-layout-blavatar"/>
+							</a>
+							<div class="widgets-list-layout-links">
+								<a href="https://yveszieba.me/who-are-you-vous-etes/vous-etes-porteurs-de-projets/conseils-et-analyse-de-la-viabilite-de-votre-projet/" title="Analyse de la viabilité de votre projet" class="bump-view" data-bump-view="tp">Analyse de la viabilité de votre projet</a>
+							</div>
+													</li>
+					</ul>
+</aside><aside id="twitter-5" class="widget widget_twitter"><h2 class="widget-title"><a href='http://twitter.com/yveszieba'>Mises à jour Twitter</a></h2><ul class='tweets'>
+			<li>
+				RT @<a href='http://twitter.com/hackyourstyle'>hackyourstyle</a>: Dernière semaine de préparation de notre campagne de financement &amp; soutien à la mode durable et l&#039;éco-luxe à <a href='http://twitter.com/search?q=%23Gen%C3%A8ve'>#Genève</a>. Su… 				<a href="http://twitter.com/yveszieba/statuses/1305183983311949824" class="timesince">2&nbsp;days&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				<a href='http://twitter.com/search?q=%23FF'>#FF</a> <a href='http://twitter.com/search?q=%23Itoday'>#Itoday</a> <a href='http://twitter.com/search?q=%23ux'>#ux</a> @<a href='http://twitter.com/stephcru'>stephcru</a> @<a href='http://twitter.com/mvu_design'>mvu_design</a> @<a href='http://twitter.com/jakek'>jakek</a> @<a href='http://twitter.com/KatieSwindlerUX'>KatieSwindlerUX</a> @<a href='http://twitter.com/kaihaley'>kaihaley</a> @<a href='http://twitter.com/JohnElbing'>JohnElbing</a> @<a href='http://twitter.com/MURAL'>MURAL</a> @<a href='http://twitter.com/Papelatyr'>Papelatyr</a> @<a href='http://twitter.com/SThiongane'>SThiongane</a>… <a href="https://twitter.com/i/web/status/1296700911277006851"> twitter.com/i/web/status/1…</a> 				<a href="http://twitter.com/yveszieba/statuses/1296700911277006851" class="timesince">3&nbsp;weeks&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				Thoughts and prayers for all our lebanese friends <a href='http://twitter.com/search?q=%23Lebanon'>#Lebanon</a>  <a href='http://twitter.com/search?q=%23BeirutBlast'>#BeirutBlast</a> <a href='http://twitter.com/search?q=%23Beirut'>#Beirut</a> 				<a href="http://twitter.com/yveszieba/statuses/1290735570566762499" class="timesince">1&nbsp;month&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				I will be attending itoday Summit with @<a href='http://twitter.com/JohnElbing'>JohnElbing</a> and many <a href='http://twitter.com/search?q=%23UX'>#UX</a> and <a href='http://twitter.com/search?q=%23InnovationLeaders'>#InnovationLeaders</a>. Innovation happens where… <a href="https://twitter.com/i/web/status/1283315711394316288"> twitter.com/i/web/status/1…</a> 				<a href="http://twitter.com/yveszieba/statuses/1283315711394316288" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/EUSocialInnov'>EUSocialInnov</a>: We&#039;re back this afternoon exploring the value of testing and prototyping with @<a href='http://twitter.com/ziebayves'>ziebayves</a> of @<a href='http://twitter.com/AgileNetUp'>AgileNetUp</a>, giving our <a href='http://twitter.com/search?q=%23dio'>#dio</a>… 				<a href="http://twitter.com/yveszieba/statuses/1281458143457947649" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				Amazing <a href='http://twitter.com/search?q=%23socinn'>#socinn</a> ressources for <a href='http://twitter.com/search?q=%23sustainablefashion'>#sustainablefashion</a> designers. <a href='http://twitter.com/search?q=%23diogochallenge'>#diogochallenge</a> <a href='http://twitter.com/search?q=%23reimaginefashion'>#reimaginefashion</a> <a href='http://twitter.com/search?q=%23Europe'>#Europe</a>… <a href="https://twitter.com/i/web/status/1281189651873779712"> twitter.com/i/web/status/1…</a> 				<a href="http://twitter.com/yveszieba/statuses/1281189651873779712" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/Kennisland'>Kennisland</a>: At 10AM CET, we will open up the social innovation academy of the @<a href='http://twitter.com/EUSocialInnov'>EUSocialInnov</a> <a href='http://twitter.com/search?q=%23diogochallenge'>#diogochallenge</a> on <a href='http://twitter.com/search?q=%23reimaginefashion'>#reimaginefashion</a> with… 				<a href="http://twitter.com/yveszieba/statuses/1281188995163193349" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/openlivinglabs'>openlivinglabs</a>: Check the video, report, and slides for our past webinar: Rural development, nature, and tourism: impact of COVID-19 an… 				<a href="http://twitter.com/yveszieba/statuses/1281187777900695558" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/openlivinglabs'>openlivinglabs</a>: Tickets are available now! Join our <a href='http://twitter.com/search?q=%23virtuallearninglab'>#virtuallearninglab</a> programme– an 8-week long learning course for aspiring <a href='http://twitter.com/search?q=%23LivingL'>#LivingL</a>… 				<a href="http://twitter.com/yveszieba/statuses/1281187729267720194" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/alvinfoo'>alvinfoo</a>: 3D video sculpture 👍 <a href="https://t.co/5vHKoqWItg" rel="nofollow">https://t.co/5vHKoqWItg</a> 				<a href="http://twitter.com/yveszieba/statuses/1281185155235840000" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/larrykim'>larrykim</a>: When you are too qualified for a job 😂 <a href="https://t.co/c77nPR6Eyi" rel="nofollow">https://t.co/c77nPR6Eyi</a> 				<a href="http://twitter.com/yveszieba/statuses/1277576456458117120" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/MasterCoach_GVA'>MasterCoach_GVA</a>: Parce qu’un paysage magnifique peut aussi être une source d’apaisement et de sérénité.  
+<a href='http://twitter.com/search?q=%23coaching'>#coaching</a> <a href='http://twitter.com/search?q=%23geneve'>#geneve</a> <a href='http://twitter.com/search?q=%23annecy'>#annecy</a> <a href='http://twitter.com/search?q=%23ta'>#ta</a>… 				<a href="http://twitter.com/yveszieba/statuses/1277499156614053888" class="timesince">2&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				Fantastic week-end to foster <a href='http://twitter.com/search?q=%23innovation'>#innovation</a> and <a href='http://twitter.com/search?q=%23resilience'>#resilience</a> in Geneva. You can vote for your favorite projet ! <a href="https://twitter.com/hackyourstyle/status/1272445336460701696"> twitter.com/hackyourstyle/…</a> 				<a href="http://twitter.com/yveszieba/statuses/1272445741890404355" class="timesince">3&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				RT @<a href='http://twitter.com/LePoleEducation'>LePoleEducation</a>: Keeping the world’s children learning through COVID-19 
+<a href="https://www.unicef.org/coronavirus/keeping-worlds-children-learning-through-covid-19"> unicef.org/coronavirus/ke…</a> 				<a href="http://twitter.com/yveszieba/statuses/1270344506974572545" class="timesince">3&nbsp;months&nbsp;ago</a>
+			</li>
+
+			
+			<li>
+				@<a href='http://twitter.com/TheLancet'>TheLancet</a> what are your data sources ? 				<a href="http://twitter.com/yveszieba/statuses/1266690269782695936" class="timesince">3&nbsp;months&nbsp;ago</a>
+			</li>
+
+			</ul><a href="http://twitter.com/yveszieba"  class='twitter-follow-button' data-show-count='false' data-link-color='#1279be' data-text-color='#303030'>Follow @yveszieba</a></aside><aside id="linkcat-695724654" class="widget widget_links"><h2 class="widget-title">SEO</h2>
+	<ul class='xoxo blogroll'>
+<li><a href="https://bit.ly/2QC42zX" title="SEO référencement" target="_blank">SEO Tools Suite</a></li>
+
+	</ul>
+</aside>
+<aside id="text-12" class="widget widget_text">			<div class="textwidget"><p><code><a href="https://www.infomaniak.com/goto/fr/home?utm_term=5e79fcf8c8d89"><img src="https://storage-master.infomaniak.ch/promotional/banners/medium_rectanglesite-general_fr.png" /></a></code></p>
+</div>
+		</aside><aside id="linkcat-695724649" class="widget widget_links"><h2 class="widget-title">Web</h2>
+	<ul class='xoxo blogroll'>
+<li><a href="http://one.me/frajccxm" title="Web hosting, Email, Wordpress Hosting" target="_blank">One.com</a>
+Web hosting, Email, Wordpress Hosting</li>
+<li><a href="https://www.siteground.com/index.htm?afcode=ec25ecb58b9c802521231fabe4aaf789" title="WebHosting, email, Wordpress, Woo, Joomla!" target="_blank">Siteground</a>
+WebHosting, email, Wordpress, Woo, Joomla!</li>
+<li><a href="https://bit.ly/2UaDDLF" title="Video rank" target="_blank">Video rank</a>
+Video rank</li>
+<li><a href="https://bit.ly/2UwZUCe" title="Zendysk" target="_blank">Zendysk</a>
+Zendysk</li>
+
+	</ul>
+</aside>
+	</div><!-- #secondary -->
+	
+</div><!-- .content-wrapper -->
+
+	</div><!-- #content -->
+
+	
+
+	<div id="tertiary" class="footer-widget-area" role="complementary">
+		<div class="footer-widget-wrapper clear">
+							<div class="footer-widget">
+					<aside id="jetpack_my_community-3" class="widget widget_jetpack_my_community"><div class='widgets-multi-column-grid'><ul><li><a href="http://www.acfasbl.be"><img alt='' src='https://0.gravatar.com/avatar/6b1d1789e48c356b5990a651fda02985?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://suississimo.com"><img alt='' src='https://0.gravatar.com/avatar/610d62c05ccd32686e3c83fbf19ea494?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=''><img alt='' src='https://1.gravatar.com/avatar/153b7aeb233bf90161e3fd55a1a153c6?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://jaiceharmon.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/744e5b5a0d2d8042e6f542e5bdcf015d?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://drktech.com"><img alt='' src='https://0.gravatar.com/avatar/3aa0042fb795a0caf49efa94fa6152cc?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://www.martingilbraith.com"><img alt='' src='https://0.gravatar.com/avatar/cc2fd2fa703176501832b5332c0bb30f?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://1.gravatar.com/avatar/a961ceedbbb8b4b9a44839e72d28052d?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://www.antoinebachelinsena.com"><img alt='' src='https://0.gravatar.com/avatar/9587e6e502b8d9c02020d4c319fb6c42?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://2.gravatar.com/avatar/b77cd7ca2daeed2a91a14669ade4770a?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://muzaffaruddin.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/21f7ea07d4df859af3ebeed503b2dbb6?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://investirdanslhommehome.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/69c0d47e7d60bc722b1232e7d8055b7b?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://mallys.fr"><img alt='' src='https://0.gravatar.com/avatar/f8ff0a6f5c336e6a303f21c3c7264d25?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://lesdelicesdesarah.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/e283461eeee715ac6696169ed732ee3f?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://www.bsf.ovh/"><img alt='' src='https://0.gravatar.com/avatar/cc0ba22016bcbfb782c8363c9519b110?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://lajoiedentreprendre.com"><img alt='' src='https://0.gravatar.com/avatar/3cd59638f02da54638a806293779cfd2?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://gilderic.wordpress.com/"><img alt='' src='https://0.gravatar.com/avatar/0394e7513d570c6f213c3ae321545850?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://thegoodolddayz.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/b596ca61e129502fe2fd2b12ed201438?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://pascalkotte.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/d4b6aac7d04846d7d3913247436375db?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://1.gravatar.com/avatar/df0b5e8d39febb75b6496ecc6fe37d93?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href='https://yveszieba.wordpress.com'><img alt='' src='https://0.gravatar.com/avatar/f9ad2537aeb7a2bb6cfafd96803044fd?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://natashayounge.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/1b988f726136a3cd0cb8825680126860?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://felicieartcolors.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/6df553541d472761beec83fd91cf30e8?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://www.business-commando.com"><img alt='' src='https://2.gravatar.com/avatar/297ed7ea9405908971ceb8b376d75f1e?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://specifierreview.com/"><img alt='' src='https://1.gravatar.com/avatar/a65ad04c349edd4fbc53b877b20b5fdc?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://2.gravatar.com/avatar/2c2ea383445901d3a58033093be4dfae?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://2.gravatar.com/avatar/e925d4c6354ea91f524b74c85405cbc5?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://lauraecpaul.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/4065a7bc41d66bb81ca60fb9c75aaaea?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://1.gravatar.com/avatar/adac2d45b931eac549c542d72cf385be?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://chameventsdotcom.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/e864b8c32a5ca2da37217b02c8fdf0f0?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://glamandsassy.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/2efe212466eceec6442e462b638934fa?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://xn--mabeautchimique-hnb.fr/"><img alt='' src='https://0.gravatar.com/avatar/90562c8053eb83242b8e54b4523bd2d8?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://amandeetcoton.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/b86744f7adf286c542a8b9470ecc582c?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=''><img alt='' src='https://2.gravatar.com/avatar/235bb075cdd057de8dd9e0f9bad243fe?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://damyantiwrites.com"><img alt='' src='https://1.gravatar.com/avatar/78104352d1d4709d6360418f12481483?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://www.playwithlife.org"><img alt='' src='https://0.gravatar.com/avatar/0e2284b177e549f3aab7138978122408?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://veryluckylife.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/d2a7ef886c25577cf6b70aeb8dc08fa9?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://makethingsgo.com"><img alt='' src='https://2.gravatar.com/avatar/87324151d833a7e22096c15f8afc6b65?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://www.anne-claire-juan-roussiale.com"><img alt='' src='https://0.gravatar.com/avatar/348d83bf958dd60fc1ce3c0dfa7e9f40?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://g2csolutions.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/f3301e03f3ad6adf672e71d83933bf5e?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://blablalinux.be"><img alt='' src='https://2.gravatar.com/avatar/ba17e4678888a1da8d18127f37b6ada9?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://viinup.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/e5aeb007cc7de35efa6dfbc354f62bca?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://lisa-christiansen.com"><img alt='' src='https://2.gravatar.com/avatar/b9de49c516b7cb41cac97e53241877fe?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://numericlandscape.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/344739c65e12293c4d192b102002b8c2?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="https://bzebza.com"><img alt='' src='https://1.gravatar.com/avatar/14e13e9141a0e012c78b9039e8987358?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://grammaireallemande.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/61d246b4ca584272bebcaed62830477a?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://skategangblog.wordpress.com"><img alt='' src='https://2.gravatar.com/avatar/b3f844a0f14df86922d1beb4bca06ce9?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href=""><img alt='' src='https://2.gravatar.com/avatar/be089aceba4f54728fce81c047d0dd09?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://evanvazquez.wordpress.com"><img alt='' src='https://1.gravatar.com/avatar/ae06b33c3aab1450ea87c1b4fc7c0dfb?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://larevolutioninterieure.com"><img alt='' src='https://0.gravatar.com/avatar/623beb77d19672918f5d03975ba8c8fe?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li><li><a href="http://coupdpouceblog.wordpress.com"><img alt='' src='https://0.gravatar.com/avatar/6873932d03ba14ea4eccce6ee3ff861d?s=48&#038;d=identicon&#038;r=G' class='avatar avatar-48' height='48' width='48' /></a></li></ul></div></aside>				</div><!-- .footer-widget -->
+			
+							<div class="footer-widget">
+					<aside id="facebook-likebox-6" class="widget widget_facebook_likebox"><h2 class="widget-title"><a href="https://www.facebook.com/yves.zieba">See you on Faceboook !</a></h2>		<div id="fb-root"></div>
+		<div class="fb-page" data-href="https://www.facebook.com/yves.zieba" data-width="340"  data-height="432" data-hide-cover="false" data-show-facepile="true" data-tabs="false" data-hide-cta="false" data-small-header="false">
+		<div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/yves.zieba"><a href="https://www.facebook.com/yves.zieba">See you on Faceboook !</a></blockquote></div>
+		</div>
+		</aside><aside id="follow_button_widget-3" class="widget widget_follow_button_widget">
+		<a class="wordpress-follow-button" href="https://yveszieba.me" data-blog="24415255" data-lang="fr" data-show-follower-count="true">Follow When the why is clear the how is easy on WordPress.com</a>
+		<script type="text/javascript">(function(d){var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');p.type = 'text/javascript';p.async = true;p.src = '//widgets.wp.com/platform.js';f.parentNode.insertBefore(p,f);}(document));</script>
+
+		</aside><aside id="twitter_timeline-5" class="widget widget_twitter_timeline"><h2 class="widget-title">Suivez-moi sur Twitter</h2><a class="twitter-timeline" data-theme="light" data-border-color="#e8e8e8" data-tweet-limit="5" data-lang="FR" data-partner="jetpack" href="https://twitter.com/ziebayves" href="https://twitter.com/ziebayves">Mes Tweets</a></aside>				</div><!-- .footer-widget -->
+			
+							<div class="footer-widget">
+					<aside id="linkcat-695724650" class="widget widget_links"><h2 class="widget-title">Education</h2>
+	<ul class='xoxo blogroll'>
+<li><a href="https://bit.ly/2QFuf0f" rel="contact" title="Parenting &amp; Education" target="_blank">Education &amp; Parenting</a>
+Parenting &amp; Education</li>
+<li><a href="https://bit.ly/2y3DCR5" title="Judo ebooks" target="_blank">Judo ebooks</a>
+Judo ebooks</li>
+<li><a href="https://bit.ly/3aa0T1L" title="Project Management" target="_blank">Project Management</a>
+Project Management</li>
+<li><a href="https://bit.ly/2WE95Um" title="Teaching from home &#8211; TutorJobs Online" target="_blank">Teaching from home</a>
+Teaching from home &#8211; TutorJobs Online</li>
+<li><a href="https://bit.ly/2QzUTaS" title="University Quickbooks" target="_blank">University Quickbooks</a>
+University Quickbooks</li>
+
+	</ul>
+</aside>
+<aside id="widget_contact_info-2" class="widget widget_contact_info"><h2 class="widget-title">Hours &amp; Info</h2><div itemscope itemtype="http://schema.org/LocalBusiness"><iframe width="600"  height="216" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=Yves+Zieba%2C+SoftSpace%2C+Rue+des+Cordiers+2%2C+1207+Geneva%2C+Switzerland&#038;key=AIzaSyCq4vWNv6eCGe2uvhPRGWQlv80IQp8dwTE" class="contact-map"></iframe><div class="confit-address" itemscope itemtype="http://schema.org/PostalAddress" itemprop="address"><a href="https://maps.google.com/maps?z=16&#038;q=yves%2Bzieba%2C%2Bsoftspace%2C%2Brue%2Bdes%2Bcordiers%2B2%2C%2B1207%2Bgeneva%2C%2Bswitzerland" target="_blank" rel="noopener noreferrer">Yves Zieba, SoftSpace, Rue des Cordiers 2, 1207 Geneva, Switzerland</a></div><div class="confit-phone"><span itemprop="telephone">+41795611054 / +41225483975</span></div><div class="confit-hours" itemprop="openingHours">Mon-Sat: 9am-6pm</div></div></aside>				</div><!-- .footer-widget -->
+					</div><!-- .footer-widget-wrapper -->
+	</div><!-- #tertiary -->
+
+
+	<footer id="colophon" class="site-footer" role="contentinfo">
+		<div class="footer-wrapper clear">
+			<div class="site-info">
+				<a href="https://wordpress.com/?ref=footer_custom_svg" title="Créez un site ou un blog sur WordPress.com" rel="nofollow"><svg style="fill: currentColor; position: relative; top: 1px;" width="14px" height="15px" viewBox="0 0 14 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-labelledby="title" role="img">
+				<desc id="title">Créez un site ou un blog sur WordPress.com</desc>
+				<path d="M12.5225848,4.97949746 C13.0138466,5.87586309 13.2934037,6.90452431 13.2934037,7.99874074 C13.2934037,10.3205803 12.0351007,12.3476807 10.1640538,13.4385638 L12.0862862,7.88081544 C12.4453251,6.98296834 12.5648813,6.26504621 12.5648813,5.62667922 C12.5648813,5.39497674 12.549622,5.17994084 12.5225848,4.97949746 L12.5225848,4.97949746 Z M7.86730089,5.04801561 C8.24619178,5.02808979 8.58760099,4.98823815 8.58760099,4.98823815 C8.9267139,4.94809022 8.88671369,4.44972248 8.54745263,4.46957423 C8.54745263,4.46957423 7.52803983,4.54957381 6.86996227,4.54957381 C6.25158863,4.54957381 5.21247202,4.46957423 5.21247202,4.46957423 C4.87306282,4.44972248 4.83328483,4.96816418 5.17254589,4.98823815 C5.17254589,4.98823815 5.49358462,5.02808979 5.83269753,5.04801561 L6.81314716,7.73459399 L5.43565839,11.8651647 L3.14394256,5.04801561 C3.52312975,5.02808979 3.86416859,4.98823815 3.86416859,4.98823815 C4.20305928,4.94809022 4.16305906,4.44972248 3.82394616,4.46957423 C3.82394616,4.46957423 2.80475558,4.54957381 2.14660395,4.54957381 C2.02852925,4.54957381 1.88934333,4.54668493 1.74156477,4.54194422 C2.86690406,2.83350881 4.80113651,1.70529256 6.99996296,1.70529256 C8.638342,1.70529256 10.1302017,2.33173369 11.2498373,3.35765419 C11.222726,3.35602457 11.1962815,3.35261718 11.1683554,3.35261718 C10.5501299,3.35261718 10.1114609,3.89113285 10.1114609,4.46957423 C10.1114609,4.98823815 10.4107217,5.42705065 10.7296864,5.94564049 C10.969021,6.36482346 11.248578,6.90326506 11.248578,7.68133501 C11.248578,8.21992476 11.0413918,8.84503256 10.7696866,9.71584277 L10.1417574,11.8132391 L7.86730089,5.04801561 Z M6.99996296,14.2927074 C6.38218192,14.2927074 5.78595654,14.2021153 5.22195356,14.0362644 L7.11048207,8.54925635 L9.04486267,13.8491542 C9.05760348,13.8802652 9.07323319,13.9089317 9.08989995,13.9358945 C8.43574834,14.1661896 7.73285573,14.2927074 6.99996296,14.2927074 L6.99996296,14.2927074 Z M0.706448182,7.99874074 C0.706448182,7.08630113 0.902152921,6.22015756 1.25141403,5.43749503 L4.25357806,13.6627848 C2.15393732,12.6427902 0.706448182,10.4898387 0.706448182,7.99874074 L0.706448182,7.99874074 Z M6.99996296,0.999 C3.14016476,0.999 0,4.13905746 0,7.99874074 C0,11.8585722 3.14016476,14.999 6.99996296,14.999 C10.8596871,14.999 14,11.8585722 14,7.99874074 C14,4.13905746 10.8596871,0.999 6.99996296,0.999 L6.99996296,0.999 Z" id="wordpress-logo-simplified-cmyk" stroke="none" fill=“currentColor” fill-rule="evenodd"></path>
+			</svg></a>
+				
+							</div><!-- .site-info -->
+							<nav class="footer-navigation" role="navigation">
+					<div class="menu-menu-du-pied-de-page-container"><ul id="menu-menu-du-pied-de-page" class="clear"><li id="menu-item-85176" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85176"><a href="https://yveszieba.me/tag/innovation-2/">innovation</a></li>
+<li id="menu-item-85177" class="menu-item menu-item-type-taxonomy menu-item-object-category current-post-ancestor current-menu-parent current-post-parent menu-item-85177"><a href="https://yveszieba.me/category/education/">Education</a></li>
+<li id="menu-item-85178" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85178"><a href="https://yveszieba.me/tag/open-source/">Open Source</a></li>
+<li id="menu-item-85179" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85179"><a href="https://yveszieba.me/tag/mooc/">MOOC</a></li>
+<li id="menu-item-85180" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85180"><a href="https://yveszieba.me/tag/modele-economique/">modèle économique</a></li>
+<li id="menu-item-85181" class="menu-item menu-item-type-taxonomy menu-item-object-category menu-item-85181"><a href="https://yveszieba.me/category/open-innovation/design-thinking/">Design Thinking</a></li>
+<li id="menu-item-85182" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85182"><a href="https://yveszieba.me/tag/accelerateur/">accelerateur</a></li>
+<li id="menu-item-85183" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85183"><a href="https://yveszieba.me/tag/universal-design/">universal design</a></li>
+<li id="menu-item-85184" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85184"><a href="https://yveszieba.me/tag/entrepreneur/">entrepreneur</a></li>
+<li id="menu-item-85185" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85185"><a href="https://yveszieba.me/tag/imprimante-3d/">Imprimante 3d</a></li>
+<li id="menu-item-85186" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85186"><a href="https://yveszieba.me/tag/fablab/">fablab</a></li>
+<li id="menu-item-85187" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85187"><a href="https://yveszieba.me/tag/conception-universelle/">Conception Universelle</a></li>
+<li id="menu-item-85188" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85188"><a href="https://yveszieba.me/tag/innovation-societale/">innovation sociétale</a></li>
+<li id="menu-item-85189" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85189"><a href="https://yveszieba.me/tag/fun/">FUN</a></li>
+<li id="menu-item-85190" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85190"><a href="https://yveszieba.me/tag/ideo/">IDEO</a></li>
+<li id="menu-item-85191" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85191"><a href="https://yveszieba.me/tag/scanner-3d/">Scanner 3D</a></li>
+<li id="menu-item-85192" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85192"><a href="https://yveszieba.me/tag/how-to/">how to</a></li>
+<li id="menu-item-85193" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85193"><a href="https://yveszieba.me/tag/how-to/">how to</a></li>
+<li id="menu-item-85194" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85194"><a href="https://yveszieba.me/tag/performance/">performance</a></li>
+<li id="menu-item-85195" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85195"><a href="https://yveszieba.me/tag/performance/">performance</a></li>
+<li id="menu-item-85196" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85196"><a href="https://yveszieba.me/tag/developpement-durable/">développement durable</a></li>
+<li id="menu-item-85197" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85197"><a href="https://yveszieba.me/tag/ecoute/">écoute</a></li>
+<li id="menu-item-85198" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85198"><a href="https://yveszieba.me/tag/management/">management</a></li>
+<li id="menu-item-85199" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85199"><a href="https://yveszieba.me/tag/strategy/">strategy</a></li>
+<li id="menu-item-85200" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85200"><a href="https://yveszieba.me/tag/open/">open</a></li>
+<li id="menu-item-85201" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85201"><a href="https://yveszieba.me/tag/ud/">UD</a></li>
+<li id="menu-item-85202" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85202"><a href="https://yveszieba.me/tag/business-model-2/">business model</a></li>
+<li id="menu-item-85203" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85203"><a href="https://yveszieba.me/tag/data/">data</a></li>
+<li id="menu-item-85204" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85204"><a href="https://yveszieba.me/tag/open-access/">Open access</a></li>
+<li id="menu-item-85205" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85205"><a href="https://yveszieba.me/tag/agility/">Agility</a></li>
+<li id="menu-item-85206" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85206"><a href="https://yveszieba.me/tag/crowdsourcing-2/">crowdsourcing</a></li>
+<li id="menu-item-85207" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85207"><a href="https://yveszieba.me/tag/ai/">AI</a></li>
+<li id="menu-item-85208" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85208"><a href="https://yveszieba.me/tag/tiers-lieux-2/">tiers-lieux</a></li>
+<li id="menu-item-85209" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85209"><a href="https://yveszieba.me/tag/conception-universelle-des-apprentissages/">conception universelle des apprentissages</a></li>
+<li id="menu-item-85210" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85210"><a href="https://yveszieba.me/tag/eau/">eau</a></li>
+<li id="menu-item-85211" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85211"><a href="https://yveszieba.me/tag/service-design/">service design</a></li>
+<li id="menu-item-85212" class="menu-item menu-item-type-taxonomy menu-item-object-post_tag menu-item-85212"><a href="https://yveszieba.me/tag/creativite/">créativité</a></li>
+</ul></div>				</nav><!-- .footer-navigation -->
+					</div><!-- .footer-wrapper -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script src='//0.gravatar.com/js/gprofiles.js?ver=202038y' id='grofiles-cards-js'></script>
+<script id='wpgroho-js-extra'>
+var WPGroHo = {"my_hash":""};
+</script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1380573781h'></script>
+
+	<script>
+		//initialize and attach hovercards to all gravatars
+		jQuery( document ).ready( function( $ ) {
+
+			if (typeof Gravatar === "undefined"){
+				return;
+			}
+
+			if ( typeof Gravatar.init !== "function" ) {
+				return;
+			}			
+
+			Gravatar.profile_cb = function( hash, id ) {
+				WPGroHo.syncProfileData( hash, id );
+			};
+			Gravatar.my_hash = WPGroHo.my_hash;
+			Gravatar.init( 'body', '#wp-admin-bar-my-account' );
+		});
+	</script>
+
+		<div style="display:none">
+	</div>
+
+	<div id="carousel-reblog-box">
+		<form action="#" name="carousel-reblog">
+			<textarea id="carousel-reblog-content" name="carousel-reblog-content" placeholder="Ajoutez votre grain de sel personnel... (facultatif)"></textarea>
+			<label for="carousel-reblog-to-blog-id" id="carousel-reblog-lblogid">Publier sur</label>
+			<select name="carousel-reblog-to-blog-id" id="carousel-reblog-to-blog-id">
+						</select>
+
+			<div class="submit">
+				<span class="canceltext"><a href="#" class="cancel">Annuler</a></span>
+				<input type="submit" name="carousel-reblog-submit" class="button" id="carousel-reblog-submit" value="Reblog Article" />
+				<input type="hidden" id="carousel-reblog-blog-id" value="24415255" />
+				<input type="hidden" id="carousel-reblog-blog-url" value="https://yveszieba.me" />
+				<input type="hidden" id="carousel-reblog-blog-title" value="When the why is clear the how is easy" />
+				<input type="hidden" id="carousel-reblog-post-url" value="" />
+				<input type="hidden" id="carousel-reblog-post-title" value="" />
+			</div>
+
+			<input type="hidden" id="_wpnonce" name="_wpnonce" value="d453c24f55" /><input type="hidden" name="_wp_http_referer" value="/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" />		</form>
+
+		<div class="arrow"></div>
+	</div>
+
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https:\/\/yveszieba.me\/2016\/09\/23\/5-tips-to-develop-your-business-stamina-yourself\/":81041};
+	</script>
+							<div id="sharing_email" style="display: none;">
+		<form action="/2016/09/23/5-tips-to-develop-your-business-stamina-yourself/" method="post">
+			<label for="target_email">Envoyer à l'adresse e-mail</label>
+			<input type="email" name="target_email" id="target_email" value="" />
+
+			
+				<label for="source_name">Votre nom</label>
+				<input type="text" name="source_name" id="source_name" value="" />
+
+				<label for="source_email">Votre adresse e-mail</label>
+				<input type="email" name="source_email" id="source_email" value="" />
+
+						<input type="text" id="jetpack-source_f_name" name="source_f_name" class="input" value="" size="25" autocomplete="off" title="Ce champ est utilisé pour la validation du formulaire et ne doit pas être changé" />
+			
+			<div
+				class="g-recaptcha"
+				data-sitekey="6LcmyE0UAAAAALID28yVNg7pFCodGaArJzHitez_"
+				data-theme="light"
+				data-type="image"
+				data-tabindex="0"></div>
+			<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl=fr" async></script>
+			
+			<img style="float: right; display: none" class="loading" src="https://s0.wp.com/wp-content/mu-plugins/post-flair/sharing/images/loading.gif" alt="loading" width="16" height="16" />
+			<input type="submit" value="Envoyer un e-mail" class="sharing_send" />
+			<a rel="nofollow" href="#cancel" class="sharing_cancel" role="button">Annuler</a>
+
+			<div class="errors errors-1" style="display: none;">
+				L'article n'a pas été envoyé - Vérifiez vos adresses e-mail&nbsp;!			</div>
+
+			<div class="errors errors-2" style="display: none;">
+				La vérification e-mail a échoué, veuillez réessayer			</div>
+
+			<div class="errors errors-3" style="display: none;">
+				Impossible de partager les articles de votre blog par e-mail.			</div>
+		</form>
+	</div>
+<script src='https://platform.twitter.com/widgets.js?ver=20111117' id='twitter-widgets-js'></script>
+<aside id="eu_cookie_law_widget-4" class="widget widget_eu_cookie_law_widget"><div
+	class="hide-on-button"
+	data-hide-timeout="30"
+	data-consent-expiration="180"
+	id="eu-cookie-law"
+>
+	<form method="post">
+		<input type="submit" value="Fermer et accepter" class="accept" />
+
+		Confidentialité &amp; Cookies : Ce site utilise des cookies. En continuant à utiliser ce site, vous acceptez leur utilisation.<br />
+Pour en savoir davantage, y compris comment contrôler les cookies, voir :
+		<a href="https://automattic.com/cookies" >
+			Politique relative aux cookies		</a>
+ </form>
+</div>
+</aside><link rel='stylesheet' id='all-css-0-2' href='https://s0.wp.com/_static/??-eJx1jDsOgCAQBS/kukqC0cJ4FrIiAeUTWcL11cJOyzeTeVgTUAysA6MvkI5ibMhI6owl6wOd5qRohxe0lHOD31G1q9F8x7dSxGDDFv8HeJWet8XPvZyEHDoxCncBi7Y1CA==?cssminify=yes' type='text/css' media='all' />
+<script id='comment-like-js-extra'>
+var comment_like_text = {"loading":"chargement\u2026"};
+</script>
+<script id='edin-navigation-js-extra'>
+var screen_reader_text = {"expand":"<span class=\"screen-reader-text\">ouvrir le sous-menu<\/span>","collapse":"<span class=\"screen-reader-text\">fermer le sous-menu<\/span>"};
+</script>
+<script id='edin-script-js-extra'>
+var screen_reader_text = {"expand":"<span class=\"screen-reader-text\">ouvrir le sous-menu<\/span>","collapse":"<span class=\"screen-reader-text\">fermer le sous-menu<\/span>"};
+</script>
+<script id='jetpack-facebook-embed-js-extra'>
+var jpfbembed = {"appid":"249643311490","locale":"fr_FR"};
+</script>
+<script id='wpcom-actionbar-bar-js-extra'>
+var actionbardata = {"siteID":"24415255","siteName":"When the why is clear the how is easy","siteURL":"https:\/\/yveszieba.me","icon":"<img alt='' src='https:\/\/yveszieba.files.wordpress.com\/2020\/02\/cropped-tg_200123_tesla_6363.jpg?w=50' class='avatar avatar-50' height='50' width='50' \/>","canManageOptions":"","canCustomizeSite":"","isFollowing":"","themeSlug":"pub\/edin","signupURL":"https:\/\/wordpress.com\/start\/","loginURL":"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fyveszieba.me%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F&signup_flow=account&domain=yveszieba.me","themeURL":"https:\/\/wordpress.com\/theme\/edin\/","xhrURL":"https:\/\/yveszieba.me\/wp-admin\/admin-ajax.php","nonce":"2c947600fd","isSingular":"1","isFolded":"","isLoggedIn":"","isMobile":"","subscribeNonce":"<input type=\"hidden\" id=\"_wpnonce\" name=\"_wpnonce\" value=\"288b1a59da\" \/>","referer":"https:\/\/yveszieba.me\/2016\/09\/23\/5-tips-to-develop-your-business-stamina-yourself\/","canFollow":"1","feedID":"15877910","statusMessage":"","customizeLink":"https:\/\/yveszieba.wordpress.com\/wp-admin\/customize.php?url=https%3A%2F%2Fyveszieba.wordpress.com%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F","postID":"81041","shortlink":"https:\/\/wp.me\/p1Erwr-l57","canEditPost":"","editLink":"https:\/\/wordpress.com\/block-editor\/post\/yveszieba.me\/81041","statsLink":"https:\/\/wordpress.com\/stats\/post\/81041\/yveszieba.me","i18n":{"view":"Afficher le site","follow":"Suivre","following":"Abonn\u00e9","edit":"Modifier","login":"Connexion","signup":"S'inscrire","customize":"Personnaliser","report":"Signaler ce contenu","themeInfo":"Obtenir le th\u00e8me: Edin","shortlink":"Copier shortlink","copied":"Copi\u00e9","followedText":"Les nouveaux articles de ce site appara\u00eetront d\u00e9sormais dans votre <a href=\"https:\/\/wordpress.com\/\">Lecteur<\/a>","foldBar":"R\u00e9duire cette barre","unfoldBar":"\u00c9tendre cette barre","editSubs":"G\u00e9rer les abonnements","viewReader":"Voir le site dans le Lecteur","viewReadPost":"Voir l\u2019article dans le Lecteur","subscribe":"M\u2019inscrire","enterEmail":"Entrez votre adresse e-mail","followers":"Rejoignez 13&nbsp;554 autres abonn\u00e9s","alreadyUser":"Vous disposez d\u00e9j\u00e0 d\u02bcun compte WordPress ? <a href=\"https:\/\/wordpress.com\/log-in?redirect_to=https%3A%2F%2Fyveszieba.me%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F&signup_flow=account&domain=yveszieba.me\">Connectez-vous maintenant.<\/a>","stats":"Statistiques"}};
+</script>
+<script id='jetpack-carousel-js-extra'>
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"fr","ajaxurl":"https:\/\/yveszieba.me\/wp-admin\/admin-ajax.php","nonce":"5299b662b8","display_exif":"1","display_comments":"1","display_geo":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Commentaire","post_comment":"Laisser un commentaire","write_comment":"\u00c9crire un commentaire...","loading_comments":"Chargement des commentaires\u2026","download_original":"Afficher dans sa taille r\u00e9elle <span class=\"photo-size\">{0}<span class=\"photo-size-times\">\u00d7<\/span>{1}<\/span>.","no_comment_text":"Veuillez ajouter du contenu \u00e0 votre commentaire.","no_comment_email":"Merci de renseigner une adresse e-mail.","no_comment_author":"Merci de renseigner votre nom.","comment_post_error":"Une erreur s'est produite \u00e0 la publication de votre commentaire. Veuillez nous en excuser, et r\u00e9essayer dans quelques instants.","comment_approved":"Votre commentaire a \u00e9t\u00e9 approuv\u00e9.","comment_unapproved":"Votre commentaire est en attente de validation.","camera":"Appareil photo","aperture":"Ouverture","shutter_speed":"Vitesse d'obturation","focal_length":"Focale","copyright":"Copyright","comment_registration":"1","require_name_email":"1","login_url":"https:\/\/yveszieba.wordpress.com\/wp-login.php?redirect_to=https%3A%2F%2Fyveszieba.me%2F2016%2F09%2F23%2F5-tips-to-develop-your-business-stamina-yourself%2F","blog_id":"24415255","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"local_comments_commenting_as":"<p id=\"jp-carousel-commenting-as\">Vous devez \u00eatre <a href=\"#\" class=\"jp-carousel-comment-login\">connect\u00e9<\/a> pour poster un commentaire.<\/p>","reblog":"Reblog","reblogged":"Reblogu\u00e9","reblog_add_thoughts":"Ajoutez votre grain de sel personnel... (facultatif)","reblogging":"Reblogging...","post_reblog":"Relais d\u2019article","stats_query_args":"blog=24415255&v=wpcom&tz=0&user_id=0&subd=yveszieba","is_public":"1","reblog_enabled":""};
+</script>
+<script id='google-translate-init-js-extra'>
+var _wp_google_translate_widget = {"lang":"fr","layout":"0"};
+</script>
+<script type='text/javascript' src='https://s0.wp.com/_static/??-eJyVkt1OwzAMhV+ILELrLrhAPApKE691mz9ipx08PYnYJrZOpVwlOj6fY/dUzlHo4Bk8y4GkgQk1xNNuoCd5W4qB2AGR6uBBdfjIkD7Pxw79hDD/aRuAo9KjSED4tejqsog2d+hJWhyBZIEy9MobC2nFrINzRRI/0FDpVtKMce2FBXQj3IPcQ/kUMuZWgkFf/V5N2CnG4DeYCVTS/RbjiLGM4EdxDDqTOOIimgdUPVd2ndF0wMWWSzWMCMKqWTK4aBXDnb7S5xyffEev5VFpaAslwLVgtlI8IzMkweigrLmWkDIOvWhVkk5RYcpNhAlSQlNmvmr/7MCpzLLI9zeka6YVut7WfiOVQiawly3FRdgQRxdCZ6FO5KkGsRBKjzf3+nx4OeybfXNohm+hzGeI'></script>
+<script src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&#038;ver=5.5-wpcom-48929' id='google-translate-js'></script>
+<script id='sharing-js-js-extra'>
+var sharing_js_options = {"lang":"fr","counts":"1","is_stats_active":"1"};
+</script>
+<script type='text/javascript' src='https://s0.wp.com/wp-content/mu-plugins/post-flair/sharing/sharing.js?m=1595340102h'></script>
+<script type='text/javascript'>
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-twitter', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtwitter', 'menubar=1,resizable=1,width=600,height=350' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-facebook', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomfacebook', 'menubar=1,resizable=1,width=600,height=400' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-linkedin', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomlinkedin', 'menubar=1,resizable=1,width=580,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-tumblr', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtumblr', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-pocket', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcompocket', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-telegram', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomtelegram', 'menubar=1,resizable=1,width=450,height=450' );
+				return false;
+			});
+var windowOpen;
+			jQuery( document.body ).on( 'click', 'a.share-skype', function() {
+				// If there's another sharing window open, close it.
+				if ( 'undefined' !== typeof windowOpen ) {
+					windowOpen.close();
+				}
+				windowOpen = window.open( jQuery( this ).attr( 'href' ), 'wpcomskype', 'menubar=1,resizable=1,width=305,height=665' );
+				return false;
+			});
+</script>
+<script type="text/javascript">
+// <![CDATA[
+(function() {
+try{
+  if ( window.external &&'msIsSiteMode' in window.external) {
+    if (window.external.msIsSiteMode()) {
+      var jl = document.createElement('script');
+      jl.type='text/javascript';
+      jl.async=true;
+      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(jl, s);
+    }
+  }
+}catch(e){}
+})();
+// ]]>
+</script>		<iframe src='https://widgets.wp.com/likes/master.html?ver=20200826#ver=20200826&amp;lang=fr' scrolling='no' id='likes-master' name='likes-master' style='display:none;'></iframe>
+		<div id='likes-other-gravatars'><div class="likes-text"><span>%d</span> blogueurs aiment cette page :</div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+<script src="//stats.wp.com/w.js?61" type="text/javascript" async defer></script>
+<script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'24415255','blog_tz':'0','user_lang':'fr','blog_lang':'fr','user_id':'0'}]);
+_stq.push(['view', {'blog':'24415255','v':'wpcom','tz':'0','user_id':'0','post':'81041','subd':'yveszieba'}]);
+_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1TaVhzUzFMbjdWNHpwZGhTayxPSUFCMGNrd29+Smw0TDhnZmRTK0hlRi9QSGh6bi9GXVhBJWIlZlR5U1JMLU8/MkNtblkvY1dQMHw4VWVoM1NSMHlQVWFhcT1UYTI3Mlg4cURsVF8zcGc0cHdkW2YydUVzOV1fcGw4P3N2LXx8Xz80eEVKV3YreiZwbFBEVmxGWVZiTGhOeWs4Y2NVMW4tLURMMm5qa2NlM3VnMEloPW13MV0vZSZKTFowbENQZjdvTEwycVJZZV16ekFUTGhXdXw5WlRWVUZXTC1tXzhzUzhBNFYmRnNyMGpZVzV1enx3YTRHZyVERVN0SUNILHw0NltDNVZvJXdFelouc1NlS2pbWjhMUF1JXWJnX2R8bWNuR0dvczdOaWNdVFFjWEIzW0lkWVBKXz9VLkxYRHAuSkR+d3g1L05GVFVrZ2pfaWxqQT9ERVZjSl83ZmROQmZyTWcxL1RZNm03MDh2Jk93OU50XywsP3RyTVhWRk49UDZCRX5OdEdYOURpPVdrdyZIbi5uMmdbRFt+WmMuL1Q3cGtYQy8sZXFQaFBtOF1hTWxaRU11ZmpsbkJCbnhEMzRGWFYyLS9aZTE1VW1XTz1RLn50WURWRHFaRA=='}]);
+_stq.push([ 'clickTrackerInit', '24415255', '81041' ]);
+	</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:0px;width:0px;overflow:hidden" alt="" /></noscript>
+<script>
+if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
+
+	wpcom_mobile_user_agent_info.init();
+	var mobileStatsQueryString = "";
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
+		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
+	
+	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
+		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
+	
+	if( wpcom_mobile_user_agent_info.isIPad() )
+		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
+
+	if( "" != mobileStatsQueryString ) {
+		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
+	}
+	
+}
+</script>
+</body>
+</html>
